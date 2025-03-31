@@ -1,0 +1,14 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~.*Test" />
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\..*ResourceServerAutoConfiguration.*" />
+		<Bug pattern="SPRING_CSRF_PROTECTION_DISABLED, EI_EXPOSE_REP2"/>
+	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\..*AuthenticationManagerResolverFactory.*" />
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE, EI_EXPOSE_REP2"/>
+	</Match>
+</FindBugsFilter>

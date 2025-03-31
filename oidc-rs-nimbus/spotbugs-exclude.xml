@@ -1,0 +1,6 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.jwk\.OAuth2RemoteJWKSet.*" />
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+	</Match>
+</FindBugsFilter>

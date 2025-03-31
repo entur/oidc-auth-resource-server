@@ -1,0 +1,18 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~.*Test" />
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+	</Match>
+	<Match>
+		<Class name="~.*MockAuthenticationServer" />
+		<Bug pattern="EI_EXPOSE_REP"/>
+	</Match>
+	<Match>
+		<Class name="~.*JwtTokenFactory" />
+		<Bug pattern="CT_CONSTRUCTOR_THROW"/>
+	</Match>
+	<Match>
+		<Class name="~.*JwtTokenFactory.*" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+</FindBugsFilter>

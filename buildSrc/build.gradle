@@ -1,0 +1,17 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+repositories {
+    gradlePluginPortal() // so that external plugins can be resolved in dependencies section
+}
+
+dependencies {
+    //implementation 'com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.12'
+    testImplementation platform("org.spockframework:spock-bom:2.3-groovy-4.0")
+    testImplementation 'org.spockframework:spock-core'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}

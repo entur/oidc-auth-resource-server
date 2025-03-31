@@ -1,0 +1,35 @@
+plugins {
+    id 'oidcAuth.java11-conventions'
+    id 'oidcAuth.library-conventions'
+}
+
+dependencies {
+    api project(":oidc-rs-test")
+
+    // Wiremock
+    api("org.wiremock:wiremock-standalone:${wiremockVersion}")
+
+    api("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}") {
+        version {
+            require "${junitJupiterVersion}"
+        }
+    }
+    api("org.junit.platform:junit-platform-commons:${junitPlatformVersion}") {
+        version {
+            require "${junitPlatformVersion}"
+        }
+    }
+
+    api("javax.servlet:javax.servlet-api:${servletApiVersion}") {
+        version {
+            require "${servletApiVersion}"
+        }
+    }
+
+    testImplementation("commons-io:commons-io:${apacheCommonsVersion}")
+    testImplementation("com.auth0:java-jwt:${javaJwtVersion}")
+}
+
+spotbugs {
+    excludeFilter = file("$projectDir/spotbugs-exclude.xml")
+}

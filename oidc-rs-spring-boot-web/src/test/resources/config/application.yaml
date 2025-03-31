@@ -1,0 +1,10 @@
+server:
+  port: 9010
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://partner.mock.entur.io
+          jwk-set-uri: http://localhost:${MOCKAUTHSERVER_PORT:9010}/partner/.well-known/jwks.json

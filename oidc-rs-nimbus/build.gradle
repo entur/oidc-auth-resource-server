@@ -1,0 +1,21 @@
+plugins {
+    id 'oidcAuth.java-conventions'
+    id 'oidcAuth.library-conventions'
+}
+
+dependencies {
+    constraints {
+        implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
+    }
+    
+    // Spring
+    compileOnly("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBoot3Version}")
+
+    // Other
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+}
+
+spotbugs {
+    excludeFilter = file("$projectDir/spotbugs-exclude.xml")
+}

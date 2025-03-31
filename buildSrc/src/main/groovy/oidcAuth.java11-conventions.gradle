@@ -1,0 +1,101 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'eclipse'
+    id 'idea'
+
+    // NOTE: external plugin version is specified in implementation dependency artifact of the project's build file
+    id 'com.github.spotbugs'
+    id 'com.github.ben-manes.versions'
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    if(project.hasProperty('jacksonDatabindVersion')) {
+        testImplementation("com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}")
+    }
+
+    if(project.hasProperty('junitJupiterVersion')) {
+        testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+    }
+
+    if(project.hasProperty('mockitoVersion')) {
+        testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    }
+
+    if(project.hasProperty('googleTruthVersion')) {
+        testImplementation("com.google.truth:truth:${googleTruthVersion}")
+        testImplementation("com.google.truth.extensions:truth-java8-extension:${googleTruthVersion}")
+    }
+}
+
+// Enable deprecation messages when compiling Java code
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
+repositories {
+    mavenCentral()
+}
+
+/*************************************************************
+ * Code quality plugins
+ *************************************************************/
+
+checkstyle {
+    config = resources.text.fromString(org.entur.auth.CheckstyleUtil.getCheckstyleConfig("/checkstyle.xml"))
+    maxWarnings = 0
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+// build.finalizedBy(dependencyCheckAnalyze)  // Disabled since it fails in GitHub Actions
+
+/*************************************************************
+ * Test plugins
+ *************************************************************/
+test {
+    useJUnitPlatform()
+
+    reports {
+        html.required = true
+    }
+}
+
+jacocoTestReport {
+    // Adjust the output of the test report
+    reports {
+        xml.required = true
+        csv.required = false
+    }
+}
+
+/*************************************************************
+ * Editor plugins
+ *************************************************************/
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+// Tell idea to output to build/classes/main instead of /out/
+idea {
+    module {
+        outputDir file('build/classes/main')
+        testOutputDir file('build/classes/test')
+    }
+}

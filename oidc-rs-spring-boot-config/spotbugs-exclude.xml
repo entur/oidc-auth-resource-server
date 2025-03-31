@@ -1,0 +1,10 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\.entur\..*Properties.*" />
+		<Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
+	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\.general\..*Properties.*" />
+		<Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
+	</Match>
+</FindBugsFilter>

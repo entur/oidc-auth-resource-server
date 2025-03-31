@@ -1,0 +1,84 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+if(project.hasProperty("signing.gnupg.keyName")) {
+    signing {
+        useGpgCmd()
+
+        publishing.publications.withType(MavenPublication).configureEach {
+            sign it
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            pom {
+                name = project.name
+                description = "A Java and Spring Boot library for obtaining client tokens from an OIDC provider"
+                packaging = 'jar'
+
+                url = "https://github.com/entur/${rootProject.name}"
+
+                scm {
+                    connection = "scm:git:https://github.com/entur/${rootProject.name}.git"
+                    developerConnection = "scm:git:https://github.com/entur/${rootProject.name}.git"
+                    url = "https://github.com/entur/${rootProject.name}"
+                }
+
+                licenses {
+                    license {
+                        name = "European Union Public Licence v. 1.2"
+                        url = "https://www.eupl.eu/"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "vevik"
+                        name = "Vidar Vevik"
+                        email = "vidar.vedvik@entur.org"
+                        }
+                    }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "Sonatype"
+            url = project.version.endsWith("-SNAPSHOT")
+                    ? "https://oss.sonatype.org/content/repositories/snapshots/"
+                    : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+            credentials {
+                username = findProperty("sonatypeUsername") ?: System.getenv("SONATYPE_AUTH_USER")
+                password = findProperty("sonatypePassword") ?: System.getenv("SONATYPE_AUTH_TOKEN")
+            }
+        }
+    }
+}

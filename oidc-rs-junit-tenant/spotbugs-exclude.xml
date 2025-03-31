@@ -1,0 +1,14 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~.*Test" />
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+	</Match>
+	<Match>
+		<Class name="~.*Test" />
+		<Bug pattern="URLCONNECTION_SSRF_FD"/>
+	</Match>
+	<Match>
+		<Class name="~.*TenantAnnotationTokenFactory" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+</FindBugsFilter>
