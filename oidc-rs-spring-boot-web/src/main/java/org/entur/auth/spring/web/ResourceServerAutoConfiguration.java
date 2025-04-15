@@ -2,6 +2,15 @@ package org.entur.auth.spring.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
+import org.entur.auth.spring.web.authorization.DefaultConfigureAuthorizeRequests;
+import org.entur.auth.spring.web.cors.ConfigureCors;
+import org.entur.auth.spring.web.cors.DefaultConfigureCors;
+import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
+import org.entur.auth.spring.web.mdc.DefaultMdcRequestFilter;
+import org.entur.auth.spring.web.server.ConfigureAuth2ResourceServer;
+import org.entur.auth.spring.web.server.DefaultConfigureAuth2ResourceServer;
+import org.entur.auth.spring.web.user.NoUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
