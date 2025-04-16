@@ -74,14 +74,6 @@ public class ResourceServerAutoConfiguration {
         }
     }
 
-    @ConditionalOnMissingBean(ConfigureMdcRequestFilter.class)
-    public static class MdcRequestFilterBean {
-        @Bean
-        public ConfigureMdcRequestFilter configureMdcRequestFilter() {
-            return new DefaultMdcRequestFilter();
-        }
-    }
-
     @ConditionalOnMissingBean(ConfigureAuthorizeRequests.class)
     public static class AuthorizeRequestsBean {
         @Bean
@@ -90,19 +82,27 @@ public class ResourceServerAutoConfiguration {
         }
     }
 
-    @ConditionalOnMissingBean(ConfigureAuth2ResourceServer.class)
-    public static class ConfigureAuth2ResourceServerBean {
-        @Bean
-        public ConfigureAuth2ResourceServer configureAuth2ResourceServer() {
-            return new DefaultConfigureAuth2ResourceServer();
-        }
-    }
-
     @ConditionalOnMissingBean(ConfigureCors.class)
     public static class ConfigureConfigureCorsBean {
         @Bean
         public ConfigureCors configureCors() {
             return new DefaultConfigureCors();
+        }
+    }
+
+    @ConditionalOnMissingBean(ConfigureMdcRequestFilter.class)
+    public static class MdcRequestFilterBean {
+        @Bean
+        public ConfigureMdcRequestFilter configureMdcRequestFilter() {
+            return new DefaultMdcRequestFilter();
+        }
+    }
+
+    @ConditionalOnMissingBean(ConfigureAuth2ResourceServer.class)
+    public static class ConfigureAuth2ResourceServerBean {
+        @Bean
+        public ConfigureAuth2ResourceServer configureAuth2ResourceServer() {
+            return new DefaultConfigureAuth2ResourceServer();
         }
     }
 }

@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class CorsHelper {
-    public static void configure(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer, CorsProperties corsProperties) {
+    public static void configure(CorsConfigurer<HttpSecurity> configurer, CorsProperties corsProperties) {
         if ("default".equals(corsProperties.getMode())) {
-            httpSecurityCorsConfigurer.configurationSource(getDefaultCorsConfiguration());
+            configurer.configurationSource(getDefaultCorsConfiguration());
         } else if ("webapp".equals(corsProperties.getMode())) {
-            httpSecurityCorsConfigurer.configurationSource(getCorsConfiguration(corsProperties.getHosts()));
+            configurer.configurationSource(getCorsConfiguration(corsProperties.getHosts()));
         } else if ("api".equals(corsProperties.getMode())) {
-            httpSecurityCorsConfigurer.configurationSource(getCorsConfiguration(Stream.concat(
+            configurer.configurationSource(getCorsConfiguration(Stream.concat(
                     corsProperties.getHosts().stream(),
                     Stream.of(
                             "https://petstore.swagger.io",
