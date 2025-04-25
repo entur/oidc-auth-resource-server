@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class TenantsProperties {
-    private String environment = "";
-    private List<String> include = new ArrayList<>();
+public class ApiProperties {
+    private String issuerUrl;
+    private List<String> audiences = new ArrayList<>();
 }

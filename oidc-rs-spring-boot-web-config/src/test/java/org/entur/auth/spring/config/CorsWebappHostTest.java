@@ -1,7 +1,5 @@
 package org.entur.auth.spring.config;
 
-
-import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +18,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
+@ExtendWith({SpringExtension.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"entur.auth.cors.mode=webapp", "entur.auth.cors.hosts=http://known.host"})
 @AutoConfigureMockMvc
 class CorsWebappHostTest {
-
     private final List<HttpMethod> methods = List.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
     private final List<String> hosts = List.of("https://petstore.swagger.io", "https://test-entur.devportal.apigee.io", "https://developer.entur.org");
     @Autowired

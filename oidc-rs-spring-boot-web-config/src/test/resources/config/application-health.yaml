@@ -1,0 +1,13 @@
+management:
+  endpoints:
+    web.exposure.include: actuator, health, info, prometheus, flyway
+  endpoint:
+    health:
+      show-details: always
+      probes.enabled: true
+      group:
+        readiness.include: readinessState,jwksState
+
+entur:
+  auth:
+    issuers: []

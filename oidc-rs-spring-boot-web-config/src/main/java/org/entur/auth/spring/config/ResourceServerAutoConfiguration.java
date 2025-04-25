@@ -1,5 +1,6 @@
 package org.entur.auth.spring.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.config.authorization.AuthorizationHelper;
@@ -9,21 +10,25 @@ import org.entur.auth.spring.config.cors.CorsHelper;
 import org.entur.auth.spring.config.cors.CorsProperties;
 import org.entur.auth.spring.config.mdc.MdcProperties;
 import org.entur.auth.spring.config.mdc.MdcRequestFilter;
-import org.entur.auth.spring.config.server.IssuersProperties;
+import org.entur.auth.spring.config.server.AuthProviders;
+import org.entur.auth.spring.config.server.AuthenticationManagerResolverFactory;
+import org.entur.auth.spring.config.server.DefaultAuthProviders;
+import org.entur.auth.spring.config.server.EnturAuthProperties;
 import org.entur.auth.spring.config.server.ServerCondition;
-import org.entur.auth.spring.config.server.ServerHelper;
-import org.entur.auth.spring.config.server.TenantsProperties;
+import org.entur.auth.spring.config.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
 import org.entur.auth.spring.web.cors.ConfigureCors;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
 import org.entur.auth.spring.web.server.ConfigureAuth2ResourceServer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
 
 /**
  * Configuration of OAuth 2.0 Resource Server JWT
@@ -78,15 +83,44 @@ public class ResourceServerAutoConfiguration {
     }
 
     @Conditional(ServerCondition.class)
-    @EnableConfigurationProperties({TenantsProperties.class, IssuersProperties.class})
     @RequiredArgsConstructor
     public static class ConfigureAuth2ResourceServerBean {
-        private final TenantsProperties tenantsProperties;
-        private final IssuersProperties issuerProperties;
+        private final AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver;
 
         @Bean
         public ConfigureAuth2ResourceServer configureAuth2ResourceServer() {
-            return configurer -> ServerHelper.configure(configurer, tenantsProperties, issuerProperties);
+            log.info("Configure ResourceServer");
+
+            return configurer -> configurer.authenticationManagerResolver(authenticationManagerResolver);
+        }
+
+    }
+
+    @Conditional(ServerCondition.class)
+    @EnableConfigurationProperties({ EnturAuthProperties.class })
+    @RequiredArgsConstructor
+    public static class AuthenticationManagerResolverBean {
+        private final EnturAuthProperties enturAuthProperties;
+        private final AuthProviders authProviders;
+
+        @Bean
+        public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
+            log.info("Configure AuthenticationManagerResolver");
+            var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
+            return AuthenticationManagerResolverFactory.create(enturAuthProperties, authProviders, authoritiesConverter);
+        }
+
+    }
+
+    @Conditional(ServerCondition.class)
+    @RequiredArgsConstructor
+    @ConditionalOnMissingBean(AuthProviders.class)
+    public static class AuthProvidersBean {
+
+        @Bean
+        public AuthProviders authProviders() {
+            log.info("Configure DefaultAuthProviders");
+            return new DefaultAuthProviders();
         }
     }
 }

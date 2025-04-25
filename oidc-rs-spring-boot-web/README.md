@@ -407,7 +407,7 @@ remember to import autoconfiguration manually in your tests with:
 ```java
 @Import(org.entur.auth.spring.config.EnturResourceServerAutoConfiguration.class)
 @Import(org.entur.auth.spring.config.TestResourceServerAutoConfiguration.class)
-@Import(org.entur.auth.spring.config.JwksHealthIndicator.class)  // Optional: to start JwksHealthIndicator
+@Import(org.entur.auth.spring.config.JwksHealthIndicatorAutoConfiguration.class)  // Optional: to start JwksHealthIndicator
 ```
 
 ## Getting hold of the Json Web Token

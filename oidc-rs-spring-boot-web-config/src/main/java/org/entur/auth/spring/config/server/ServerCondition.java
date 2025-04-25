@@ -9,12 +9,9 @@ public class ServerCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        var tenantsProperties = Binder.get(context.getEnvironment())
-                .bind("entur.auth.tenant", TenantsProperties.class)
+        var enturAuthProperties = Binder.get(context.getEnvironment())
+                .bind("entur.auth", EnturAuthProperties.class)
                 .orElse(null);
-        var issuersProperties = Binder.get(context.getEnvironment())
-                .bind("entur.auth.issuers", IssuersProperties.class)
-                .orElse(null);
-        return (tenantsProperties != null && tenantsProperties.isEnabled()) || (issuersProperties != null && !issuersProperties.isEmpty());
+        return (enturAuthProperties != null && enturAuthProperties.isEnabled());
     }
 }

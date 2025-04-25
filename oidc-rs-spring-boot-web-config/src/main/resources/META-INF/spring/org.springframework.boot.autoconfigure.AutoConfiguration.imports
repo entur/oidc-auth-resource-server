@@ -1,1 +1,2 @@
 org.entur.auth.spring.config.ResourceServerAutoConfiguration
+org.entur.auth.spring.config.JwksHealthIndicatorAutoConfiguration

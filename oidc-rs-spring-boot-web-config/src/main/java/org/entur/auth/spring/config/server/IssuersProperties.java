@@ -4,3 +4,5 @@ import java.util.ArrayList;
 
 public class IssuersProperties extends ArrayList<IssuerProperties> {
 }
+
+
