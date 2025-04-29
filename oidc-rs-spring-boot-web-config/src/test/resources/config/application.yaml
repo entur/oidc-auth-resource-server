@@ -9,6 +9,6 @@ entur:
         matcher:
           patterns:
             - /unprotected
-    issuers:
-      - issuerUrl: https://partner.mock.entur.io
-        certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
+    tenants:
+      environment: mock
+      include: partner

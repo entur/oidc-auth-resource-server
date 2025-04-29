@@ -4,6 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
@@ -14,26 +17,27 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 public class MdcRequestFilter extends OncePerRequestFilter implements ConfigureMdcRequestFilter {
     private final List<MdcFromToProperties> mappings = new ArrayList<>();
 
     public MdcRequestFilter(MdcProperties mdcProperties) {
         this.mappings.addAll(mdcProperties.getMappings());
-        if(this.mappings.isEmpty()) {
+        if (this.mappings.isEmpty()) {
             this.mappings.add(new MdcFromToProperties("azp", "clientId"));
-            this.mappings.add(new MdcFromToProperties("https://entur.io/organisationID", "organisationId"));
+            this.mappings.add(
+                    new MdcFromToProperties("https://entur.io/organisationID", "organisationId"));
         }
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain)
+            throws IOException, ServletException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
             Jwt token = jwtAuthenticationToken.getToken();
             addMDC(mappings, token);
             try {
@@ -42,21 +46,22 @@ public class MdcRequestFilter extends OncePerRequestFilter implements ConfigureM
                 removeMDC(mappings);
             }
         } else {
-            chain.doFilter(request,response);
+            chain.doFilter(request, response);
         }
     }
 
     private static void addMDC(@NonNull List<MdcFromToProperties> mappings, Jwt token) {
-        if(token == null) {
+        if (token == null) {
             return;
         }
 
-        mappings.forEach(mdcFromToProperties -> {
-            Object value = token.getClaim(mdcFromToProperties.getFrom());
-            if (value != null) {
-                MDC.put(mdcFromToProperties.getTo(), value.toString());
-            }
-        });
+        mappings.forEach(
+                mdcFromToProperties -> {
+                    Object value = token.getClaim(mdcFromToProperties.getFrom());
+                    if (value != null) {
+                        MDC.put(mdcFromToProperties.getTo(), value.toString());
+                    }
+                });
     }
 
     private static void removeMDC(@NonNull List<MdcFromToProperties> mappings) {

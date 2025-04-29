@@ -155,7 +155,7 @@ public final class OAuth2RemoteJWKSet<C extends SecurityContext> implements JWKS
             throws RemoteKeySourceException {
 
         // Handle cache lifetime expired
-        if((this.jwkSetCache).isExpired()) {
+        if(this.jwkSetCache.isExpired()) {
             cacheIsExpiredAndCacheIsNotValid();
         }
 

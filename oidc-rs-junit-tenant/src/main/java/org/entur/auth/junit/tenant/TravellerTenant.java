@@ -7,46 +7,34 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to configure and generate a JSON Web Token (JWT) for a traveller tenant.
- * <p>
- * This annotation can be applied to method parameters in JUnit tests to specify the token properties
- * for a traveller tenant. It provides default values for the client identifier, organisation identifier,
- * customer number, audience, and the token validity duration.
- * </p>
+ *
+ * <p>This annotation can be applied to method parameters in JUnit tests to specify the token
+ * properties for a traveller tenant. It provides default values for the client identifier,
+ * organisation identifier, customer number, audience, and the token validity duration.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface TravellerTenant {
 
-    /**
-     * The default client identifier for a traveller tenant.
-     */
+    /** The default client identifier for a traveller tenant. */
     String DEFAULT_CLIENT_ID = "myPartnerClientId";
 
-    /**
-     * The default organisation identifier for a traveller tenant.
-     */
+    /** The default organisation identifier for a traveller tenant. */
     long DEFAULT_ORGANISATION_ID = 123L;
 
-    /**
-     * The default customer number for a traveller tenant.
-     */
+    /** The default customer number for a traveller tenant. */
     String DEFAULT_CUSTOMER_NUMBER = "myCustomerNumber";
 
-    /**
-     * The default token validity duration in minutes.
-     */
+    /** The default token validity duration in minutes. */
     int DEFAULT_TOKEN_VALID_IN_MINUTES = 5;
 
-    /**
-     * The default audience for the token.
-     */
+    /** The default audience for the token. */
     String DEFAULT_AUDIENCE = "https://api.dev.entur.io";
 
     /**
      * Returns the organisation identifier for the traveller tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_ORGANISATION_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_ORGANISATION_ID}.
      *
      * @return the organisation id
      */
@@ -54,9 +42,8 @@ public @interface TravellerTenant {
 
     /**
      * Returns the client identifier for the traveller tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_CLIENT_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_CLIENT_ID}.
      *
      * @return the client id
      */
@@ -64,9 +51,8 @@ public @interface TravellerTenant {
 
     /**
      * Returns the customer number for the traveller tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_CUSTOMER_NUMBER}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_CUSTOMER_NUMBER}.
      *
      * @return the customer number
      */
@@ -74,9 +60,8 @@ public @interface TravellerTenant {
 
     /**
      * Returns the audience for the token.
-     * <p>
-     * Defaults to {@link #DEFAULT_AUDIENCE}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_AUDIENCE}.
      *
      * @return the audience
      */
@@ -84,12 +69,10 @@ public @interface TravellerTenant {
 
     /**
      * Returns the token validity duration in minutes.
-     * <p>
-     * Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
      *
      * @return the token expiration time in minutes
      */
     int expiresInMinutes() default DEFAULT_TOKEN_VALID_IN_MINUTES;
-
 }

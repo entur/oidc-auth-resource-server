@@ -1,2 +1,2 @@
 rootProject.name = 'oidc-auth-resource-server'
-include 'oidc-rs-test', 'oidc-rs-junit-tenant', 'oidc-rs-nimbus', 'oidc-rs-spring-boot-web', 'oidc-rs-spring-boot-web-config'
+include 'oidc-rs-test', 'oidc-rs-junit-tenant', 'oidc-rs-spring-boot-web', 'oidc-rs-spring-boot-web-config', 'oidc-rs-spring-boot-web-test'

@@ -1,5 +1,8 @@
 package org.entur.auth.spring.config;
 
+import com.nimbusds.jose.jwk.source.JWKSetSourceWithHealthStatusReporting;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jose.util.health.HealthReportListener;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
 import org.entur.auth.spring.web.cors.ConfigureCors;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
 import org.entur.auth.spring.web.server.ConfigureAuth2ResourceServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -32,31 +36,41 @@ import org.springframework.security.authentication.AuthenticationManagerResolver
 
 /**
  * Configuration of OAuth 2.0 Resource Server JWT
+ *
  * @see "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html"
  */
-
 @Slf4j
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ResourceServerAutoConfiguration {
 
-
-    @ConditionalOnProperty(prefix = "entur.auth.authorization", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "entur.auth.authorization",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @EnableConfigurationProperties(AuthorizationProperties.class)
     @RequiredArgsConstructor
     public static class ConfigureAuthorizeHttpRequestsBean {
         private final AuthorizationProperties authorizationProperties;
-        @Value("${management.endpoints.web.base-path:/actuator}") String managementBasePath;
+
+        @Value("${management.endpoints.web.base-path:/actuator}")
+        String managementBasePath;
 
         @Bean
         ConfigureAuthorizeRequests configureAuthorizeRequests() {
             log.info("Configure Authorize Requests");
-            return registry -> AuthorizationHelper.configure(registry, authorizationProperties, managementBasePath);
+            return registry ->
+                    AuthorizationHelper.configure(registry, authorizationProperties, managementBasePath);
         }
     }
 
     @Conditional(CorsCondition.class)
-    @ConditionalOnProperty(prefix = "entur.auth.cors", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "entur.auth.cors",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @EnableConfigurationProperties(CorsProperties.class)
     @RequiredArgsConstructor
     static class ConfigureCorsBean {
@@ -69,7 +83,11 @@ public class ResourceServerAutoConfiguration {
         }
     }
 
-    @ConditionalOnProperty(prefix = "entur.auth.mdc", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(
+            prefix = "entur.auth.mdc",
+            name = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @EnableConfigurationProperties(MdcProperties.class)
     @RequiredArgsConstructor
     static class ConfigureMdcRequestFilterBean {
@@ -93,23 +111,28 @@ public class ResourceServerAutoConfiguration {
 
             return configurer -> configurer.authenticationManagerResolver(authenticationManagerResolver);
         }
-
     }
 
     @Conditional(ServerCondition.class)
-    @EnableConfigurationProperties({ EnturAuthProperties.class })
+    @EnableConfigurationProperties({EnturAuthProperties.class})
     @RequiredArgsConstructor
     public static class AuthenticationManagerResolverBean {
         private final EnturAuthProperties enturAuthProperties;
         private final AuthProviders authProviders;
 
+        @Autowired
+        private HealthReportListener<
+                        JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
+                healthReportListener;
+
         @Bean
+        @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
         public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
             log.info("Configure AuthenticationManagerResolver");
             var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
-            return AuthenticationManagerResolverFactory.create(enturAuthProperties, authProviders, authoritiesConverter);
+            return AuthenticationManagerResolverFactory.create(
+                    enturAuthProperties, authProviders, authoritiesConverter, healthReportListener);
         }
-
     }
 
     @Conditional(ServerCondition.class)

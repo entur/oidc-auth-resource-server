@@ -7,41 +7,31 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to configure and generate a JSON Web Token (JWT) for an internal tenant.
- * <p>
- * This annotation can be applied to method parameters in JUnit tests to specify the token properties
- * for an internal tenant. The provided values include the organisation ID, client ID, audience, and
- * the token's validity duration. Default values are defined for all properties.
- * </p>
+ *
+ * <p>This annotation can be applied to method parameters in JUnit tests to specify the token
+ * properties for an internal tenant. The provided values include the organisation ID, client ID,
+ * audience, and the token's validity duration. Default values are defined for all properties.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface InternalTenant {
 
-    /**
-     * The default client identifier for an internal tenant.
-     */
+    /** The default client identifier for an internal tenant. */
     String DEFAULT_CLIENT_ID = "myPartnerClientId";
 
-    /**
-     * The default organisation identifier for an internal tenant.
-     */
+    /** The default organisation identifier for an internal tenant. */
     long DEFAULT_ORGANISATION_ID = 123L;
 
-    /**
-     * The default token validity duration in minutes.
-     */
+    /** The default token validity duration in minutes. */
     int DEFAULT_TOKEN_VALID_IN_MINUTES = 5;
 
-    /**
-     * The default audience for the token.
-     */
+    /** The default audience for the token. */
     String DEFAULT_AUDIENCE = "https://api.dev.entur.io";
 
     /**
      * The organisation identifier for the internal tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_ORGANISATION_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_ORGANISATION_ID}.
      *
      * @return the organisation id
      */
@@ -49,9 +39,8 @@ public @interface InternalTenant {
 
     /**
      * The client identifier for the internal tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_CLIENT_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_CLIENT_ID}.
      *
      * @return the client id
      */
@@ -59,9 +48,8 @@ public @interface InternalTenant {
 
     /**
      * The audience for the token.
-     * <p>
-     * Defaults to {@link #DEFAULT_AUDIENCE}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_AUDIENCE}.
      *
      * @return the audience
      */
@@ -69,9 +57,8 @@ public @interface InternalTenant {
 
     /**
      * The token validity period in minutes.
-     * <p>
-     * Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
      *
      * @return the token expiration time in minutes
      */

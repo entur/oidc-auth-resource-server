@@ -8,7 +8,8 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 @Slf4j
 public class DefaultConfigureAuth2ResourceServer implements ConfigureAuth2ResourceServer {
     @Override
-    public void customize(OAuth2ResourceServerConfigurer<HttpSecurity> httpSecurityOAuth2ResourceServerConfigurer) {
+    public void customize(
+            OAuth2ResourceServerConfigurer<HttpSecurity> httpSecurityOAuth2ResourceServerConfigurer) {
         log.info("Configure DefaultConfigureAuth2ResourceServer");
         httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults());
     }

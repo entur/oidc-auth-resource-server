@@ -14,8 +14,6 @@ dependencies {
         implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
     }
 
-    api project(':oidc-rs-nimbus')
-
     // Spring
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBoot3Version}")
     api("org.springframework.boot:spring-boot-starter-web:${springBoot3Version}")

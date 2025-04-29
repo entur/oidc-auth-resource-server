@@ -1,5 +1,7 @@
 package org.entur.auth.spring.web;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
@@ -23,13 +25,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 /**
  * Configuration of OAuth 2.0 Resource Server JWT
+ *
  * @see "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html"
  */
-
 @Slf4j
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
@@ -46,10 +46,11 @@ public class ResourceServerAutoConfiguration {
         private final ConfigureCors configureCors;
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws ResourceServerConfigurationException {
+        public SecurityFilterChain filterChain(HttpSecurity http)
+                throws ResourceServerConfigurationException {
             try {
-                return http
-                        .sessionManagement(sessionManager-> sessionManager.sessionCreationPolicy(STATELESS))
+                return http.sessionManagement(
+                                sessionManager -> sessionManager.sessionCreationPolicy(STATELESS))
                         .csrf(AbstractHttpConfigurer::disable)
                         .formLogin(AbstractHttpConfigurer::disable)
                         .httpBasic(AbstractHttpConfigurer::disable)
@@ -63,14 +64,13 @@ public class ResourceServerAutoConfiguration {
                 throw new ResourceServerConfigurationException(e);
             }
         }
-
     }
 
     @ConditionalOnMissingBean(UserDetailsService.class)
     public static class UserDetailsServiceBean {
         @Bean
         public UserDetailsService userDetailsService() {
-            return new NoUserDetailsService();  // avoid the default user.
+            return new NoUserDetailsService(); // avoid the default user.
         }
     }
 

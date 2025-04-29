@@ -3,19 +3,13 @@ package org.entur.auth;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-
 import javax.net.ServerSocketFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Utility for reserving a port. 
- *
- */
-
+/** Utility for reserving a port. */
 public class PortReservation {
-    
+
     private static final Logger log = LoggerFactory.getLogger(PortReservation.class);
 
     private static final int PORT_RANGE_MAX = 65535;
@@ -48,35 +42,38 @@ public class PortReservation {
     }
 
     public boolean start() {
-        if(portRangeStart <= 0) {
+        if (portRangeStart <= 0) {
             throw new IllegalArgumentException("Port range start must be greater than 0.");
         }
-        if(portRangeEnd < portRangeStart) {
+        if (portRangeEnd < portRangeStart) {
             throw new IllegalArgumentException("Port range end must not be lower than port range end.");
         }
-        if(portRangeEnd > PORT_RANGE_MAX) {
-            throw new IllegalArgumentException("Port range end must not be larger than " + PORT_RANGE_MAX + ".");
+        if (portRangeEnd > PORT_RANGE_MAX) {
+            throw new IllegalArgumentException(
+                    "Port range end must not be larger than " + PORT_RANGE_MAX + ".");
         }
         // check if the property already exists, if so it must be free
         String property = System.getProperty(propertyName);
-        if(property != null) {
-            if(reserve(Integer.parseInt(property))) {
-            	log.warn("Reserved previously configured port " + property);
+        if (property != null) {
+            if (reserve(Integer.parseInt(property))) {
+                log.warn("Reserved previously configured port " + property);
                 return true;
             } else {
-            	throw new IllegalArgumentException("Preconfigured port " + property + " is not free");
+                throw new IllegalArgumentException("Preconfigured port " + property + " is not free");
             }
         }
         // systematically try ports in range
         // starting at 'random' offset
         int portRange = portRangeEnd - portRangeStart + 1;
 
-        int offset = (propertyName.hashCode() + (int)System.currentTimeMillis()) % portRange; // more or less random per port name
+        int offset =
+                (propertyName.hashCode() + (int) System.currentTimeMillis())
+                        % portRange; // more or less random per port name
 
-        for(int i = 0; i < portRange; i++) {
+        for (int i = 0; i < portRange; i++) {
             int candidatePort = portRangeStart + (offset + portRange) % portRange;
-            if(reserve(candidatePort)) {
-            	log.warn("Reserved newly configured port " + candidatePort);
+            if (reserve(candidatePort)) {
+                log.warn("Reserved newly configured port " + candidatePort);
                 return true;
             }
         }
@@ -86,12 +83,12 @@ public class PortReservation {
     private boolean reserve(int candidatePort) {
         try {
             ServerSocket result = capturePort(candidatePort);
-            if(result != null) {
+            if (result != null) {
                 reserved(candidatePort, result);
 
                 return true;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             // continue
         }
         return false;
@@ -107,7 +104,7 @@ public class PortReservation {
 
     public void stop() {
         ServerSocket serverSocket = this.serverSocket;
-        if(serverSocket != null) {
+        if (serverSocket != null) {
             try {
                 serverSocket.close();
             } catch (IOException e) {
@@ -120,10 +117,10 @@ public class PortReservation {
 
     private static ServerSocket capturePort(int port) {
         try {
-            return ServerSocketFactory.getDefault().createServerSocket(port, 1, InetAddress.getByName("localhost"));
+            return ServerSocketFactory.getDefault()
+                    .createServerSocket(port, 1, InetAddress.getByName("localhost"));
         } catch (Exception ex) {
             return null;
         }
     }
-
-}   
+}

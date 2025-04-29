@@ -7,9 +7,10 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 @Slf4j
 public class DefaultConfigureAuthorizeRequests implements ConfigureAuthorizeRequests {
     @Override
-    public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationManagerRequestMatcherRegistry) {
+    public void customize(
+            AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
+                    authorizationManagerRequestMatcherRegistry) {
         log.info("Configure DefaultConfigureAuthorizeRequests");
         authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
-
     }
 }

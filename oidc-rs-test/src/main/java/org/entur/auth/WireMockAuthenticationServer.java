@@ -7,19 +7,13 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 
-/**
- * A mock authentication server using WireMock to simulate authentication endpoints.
- */
+/** A mock authentication server using WireMock to simulate authentication endpoints. */
 public class WireMockAuthenticationServer implements AutoCloseable {
 
-    /**
-     * The WireMock server instance.
-     */
+    /** The WireMock server instance. */
     private final WireMockServer mockServer;
 
-    /**
-     * Constructs a WireMock authentication server with a dynamically assigned port.
-     */
+    /** Constructs a WireMock authentication server with a dynamically assigned port. */
     public WireMockAuthenticationServer() {
         mockServer = new WireMockServer(wireMockConfig().dynamicPort());
     }
@@ -37,14 +31,16 @@ public class WireMockAuthenticationServer implements AutoCloseable {
      * Sets up a json endpoint with a predefined response.
      *
      * @param certEndpoint The endpoint URL.
-     * @param response     The response body.
+     * @param response The response body.
      */
     public void setJsonStubMappings(String certEndpoint, String response) {
-        mockServer.stubFor(get(urlEqualTo(certEndpoint))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(response)));
+        mockServer.stubFor(
+                get(urlEqualTo(certEndpoint))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(response)));
     }
 
     /**
@@ -56,9 +52,7 @@ public class WireMockAuthenticationServer implements AutoCloseable {
         return mockServer.port();
     }
 
-    /**
-     * Starts the mock server and sets the "MOCKAUTHSERVER_PORT" system property.
-     */
+    /** Starts the mock server and sets the "MOCKAUTHSERVER_PORT" system property. */
     public void start() {
         mockServer.start();
     }
@@ -72,17 +66,13 @@ public class WireMockAuthenticationServer implements AutoCloseable {
         return mockServer.isRunning();
     }
 
-    /**
-     * Stops the mock server and releases resources.
-     */
+    /** Stops the mock server and releases resources. */
     public void close() {
-	    mockServer.stop();
+        mockServer.stop();
         mockServer.shutdown();
     }
 
-    /**
-     * Resets all WireMock mappings and requests.
-     */
+    /** Resets all WireMock mappings and requests. */
     public void reset() {
         mockServer.resetAll();
     }

@@ -26,6 +26,11 @@ dependencies {
         }
     }
 
+    // Other
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+    // Test
     testImplementation("commons-io:commons-io:${apacheCommonsVersion}")
     testImplementation("com.auth0:java-jwt:${javaJwtVersion}")
 }

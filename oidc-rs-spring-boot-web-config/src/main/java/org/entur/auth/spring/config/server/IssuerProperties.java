@@ -6,8 +6,9 @@ import lombok.Data;
 public class IssuerProperties {
     private String issuerUrl;
     private String certificateUrl;
-    private String authProvider;
-    private Integer certificateReloadPeriodInMinutes = 60;
-    private long fallbackCertificateReloadPeriodInMinutes;
-    private Integer cacheLifespan = -1;
+    private Boolean retryOnFailure;
+    private Integer jwksThrottleWait;
+    private Integer refreshAheadTime;
+    private Integer cacheRefreshTimeout;
+    private Integer cacheLifespan;
 }

@@ -1,11 +1,10 @@
 package org.entur.auth.spring.config.authorization;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @RequiredArgsConstructor

@@ -1,67 +1,67 @@
 package org.entur.auth;
 
 /**
- * Represents an authentication provider that supports multiple tenants and
- * provides utility methods for handling authentication-related information.
+ * Represents an authentication provider that supports multiple tenants and provides utility methods
+ * for handling authentication-related information.
  */
 public interface Provider {
-	/** Default key identifier. */
-	String KEY_ID_DEFAULT = "12345678";
+    /** Default key identifier. */
+    String KEY_ID_DEFAULT = "12345678";
 
-	/** Claim name for authorized party. */
-	String CLAIM_AZP = "azp";
+    /** Claim name for authorized party. */
+    String CLAIM_AZP = "azp";
 
-	/** Claim name for subject. */
-	String CLAIM_SUB = "sub";
+    /** Claim name for subject. */
+    String CLAIM_SUB = "sub";
 
-	/** Claim name for preferred username. */
-	String CLAIM_PREFERRED_USERNAME = "preferred_username";
+    /** Claim name for preferred username. */
+    String CLAIM_PREFERRED_USERNAME = "preferred_username";
 
-	/** Claim name for email. See RFC 5322. */
-	String CLAIM_EMAIL = "email";
+    /** Claim name for email. See RFC 5322. */
+    String CLAIM_EMAIL = "email";
 
-	/** Claim name for email verification. */
-	String CLAIM_EMAIL_VERIFIED = "email_verified";
+    /** Claim name for email verification. */
+    String CLAIM_EMAIL_VERIFIED = "email_verified";
 
-	/**
-	 * Returns the name of the authentication provider.
-	 *
-	 * @return the name of the provider, defaulting to "auth0".
-	 */
-	default String getName() {
-			return "provider";
-	}
+    /**
+     * Returns the name of the authentication provider.
+     *
+     * @return the name of the provider, defaulting to "auth0".
+     */
+    default String getName() {
+        return "provider";
+    }
 
-	/**
-	 * Returns the issuer URL for a given tenant.
-	 *
-	 * @param tenant the tenant name
-	 * @return the issuer URL for the specified tenant
-	 * @throws IllegalArgumentException if the tenant is not recognized
-	 */
-	default String getIssuerUrl(String tenant) {
-		return String.format("https://mock/auth/realms/%s", tenant);
-	}
+    /**
+     * Returns the issuer URL for a given tenant.
+     *
+     * @param tenant the tenant name
+     * @return the issuer URL for the specified tenant
+     * @throws IllegalArgumentException if the tenant is not recognized
+     */
+    default String getIssuerUrl(String tenant) {
+        return String.format("https://mock/auth/realms/%s", tenant);
+    }
 
-	/**
-	 * Returns the certificate path for a given tenant.
-	 *
-	 * @param tenant the tenant name
-	 * @return the certificate path for the specified tenant
-	 * @throws IllegalArgumentException if the tenant is not recognized
-	 */
-	default String getCertPath(String tenant) {
-		return String.format("/%s/.well-known/jwks.json", tenant);
-	}
+    /**
+     * Returns the certificate path for a given tenant.
+     *
+     * @param tenant the tenant name
+     * @return the certificate path for the specified tenant
+     * @throws IllegalArgumentException if the tenant is not recognized
+     */
+    default String getCertPath(String tenant) {
+        return String.format("/%s/.well-known/jwks.json", tenant);
+    }
 
-	/**
-	 * Maps a claim name to its corresponding value.
-	 * This method provides a default implementation that returns the input name unchanged.
-	 *
-	 * @param name the claim name to map
-	 * @return the mapped claim name
-	 */
-	default String mapClaimName(String name) {
-			return name;
-	}
+    /**
+     * Maps a claim name to its corresponding value. This method provides a default implementation
+     * that returns the input name unchanged.
+     *
+     * @param name the claim name to map
+     * @return the mapped claim name
+     */
+    default String mapClaimName(String name) {
+        return name;
+    }
 }

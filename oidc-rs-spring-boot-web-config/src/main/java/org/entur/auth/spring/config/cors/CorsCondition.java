@@ -9,9 +9,10 @@ public class CorsCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        var properties = Binder.get(context.getEnvironment())
-                .bind("entur.auth.cors", CorsProperties.class)
-                .orElse(null);
+        var properties =
+                Binder.get(context.getEnvironment())
+                        .bind("entur.auth.cors", CorsProperties.class)
+                        .orElse(null);
         return properties != null;
     }
 }
