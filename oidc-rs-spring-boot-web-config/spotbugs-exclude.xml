@@ -7,4 +7,9 @@
 		<Class name="~org\.entur\.auth\.spring\.config\..*ResourceServerAutoConfiguration.*" />
 		<Bug pattern="EI_EXPOSE_REP2"/>
 	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\..*AuthenticationManagerResolver" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+
 </FindBugsFilter>

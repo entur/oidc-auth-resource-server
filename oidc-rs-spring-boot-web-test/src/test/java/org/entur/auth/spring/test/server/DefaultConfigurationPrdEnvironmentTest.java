@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.entur.auth.spring.config.server.DisposableAuthenticationManagerResolver;
+import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
             "entur.auth.tenants.environment=prd",
             "entur.auth.tenants.include=internal,traveller,partner,person",
             "entur.auth.test.load-environments=true",
-            "entur.auth.lazy-load=true"
+            "entur.auth.lazy-load=true" // Test dont need to fetch JWKS
         })
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -37,10 +37,10 @@ class DefaultConfigurationPrdEnvironmentTest {
     @Test
     void testTenantHasBeenLoaded() {
         Assertions.assertInstanceOf(
-                DisposableAuthenticationManagerResolver.class, authenticationManagerResolver);
+                IssuerAuthenticationManagerResolver.class, authenticationManagerResolver);
 
-        DisposableAuthenticationManagerResolver resolver =
-                (DisposableAuthenticationManagerResolver) authenticationManagerResolver;
+        IssuerAuthenticationManagerResolver resolver =
+                (IssuerAuthenticationManagerResolver) authenticationManagerResolver;
 
         var issuers = resolver.getIssuers();
 

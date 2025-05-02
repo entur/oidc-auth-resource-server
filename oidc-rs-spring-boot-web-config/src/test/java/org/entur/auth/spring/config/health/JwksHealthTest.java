@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class JwksHealthTest {
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testCorsHostAndMethodAllowed() throws Exception {

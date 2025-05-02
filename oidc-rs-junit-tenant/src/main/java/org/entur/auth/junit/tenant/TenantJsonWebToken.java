@@ -1,15 +1,14 @@
 package org.entur.auth.junit.tenant;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.entur.auth.JwtTokenFactory;
 import org.entur.auth.PortReservation;
+import org.entur.auth.Provider;
 import org.entur.auth.WireMockAuthenticationServer;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -32,10 +31,11 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * to constants provided by the {@link org.entur.auth.junit.tenant.EnturProvider}.
  */
 @Slf4j
-public class TenantJsonWebToken
-        implements ParameterResolver, BeforeEachCallback, BeforeAllCallback {
+public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback {
     /** The name used for reserving the port for the mock authentication server. */
     public static final String MOCKAUTHSERVER_PORT_NAME = "MOCKAUTHSERVER_PORT";
+
+    private static final Provider provider = new EnturProvider();
 
     /**
      * Map of Tenant identifiers supported by the JWT token factory -> tenant-specific annotation
@@ -57,20 +57,7 @@ public class TenantJsonWebToken
      */
     @Override
     public void beforeAll(ExtensionContext context) {
-        setupPortReservation();
         setupTokenFactory();
-    }
-
-    /**
-     * Callback that is invoked before each test execution.
-     *
-     * <p>This method ensures that the WireMock server is running before each test.
-     *
-     * @param context the current extension context; never {@code null}
-     */
-    @Override
-    public void beforeEach(ExtensionContext context) {
-        startIfNotRunning();
     }
 
     /**
@@ -95,11 +82,14 @@ public class TenantJsonWebToken
                 return true;
             }
         }
-        if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
+
+        if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
+            return true;
+        } else if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
             return true;
         }
 
-        return parameterContext.getParameter().getType() == WireMockServer.class;
+        return parameterContext.getParameter().getType() == WireMock.class;
     }
 
     /**
@@ -128,46 +118,29 @@ public class TenantJsonWebToken
         }
         if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
             return tokenFactory;
-        }
-        if (parameterContext.getParameter().getType() == WireMockServer.class) {
+        } else if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
+            return tokenFactory.getServer();
+        } else if (parameterContext.getParameter().getType() == WireMock.class) {
             return tokenFactory.getServer().getMockServer();
         }
+
         throw new CanNotResolveParameterException();
     }
 
-    private static void setupPortReservation() {
+    private static void setupTokenFactory() {
         // this code should run before the spring context starts, but in case the class is not loaded,
         // the spring context will run first.
         // In which case the MOCKAUTHSERVER_PORT port must be a free port.
         if (portReservation == null) {
             portReservation = new PortReservation(MOCKAUTHSERVER_PORT_NAME);
-        }
-
-        // Reserve port
-        if (portReservation.getPort() < 0) {
             portReservation.start();
         }
-    }
 
-    private static void setupTokenFactory() {
         // Run with a fixed set of certificates so that spring context reuse works:
         // Context A loads the certificates, context B (i.e. not-dirty A context) uses those
         // certificates to validate tokens.
         if (tokenFactory == null) {
-            log.info("Setup mock server was on port {}", portReservation.getPort());
-            var provider = new EnturProvider();
-            var jwtTokenFactory = new JwtTokenFactory(provider);
-            var server = new WireMockAuthenticationServer(portReservation.getPort());
-            tokenFactory = new TenantAnnotationTokenFactory(provider, jwtTokenFactory, server);
-        }
-    }
-
-    private static void startIfNotRunning() {
-        var server = tokenFactory.getServer();
-        if (!server.isRunning()) {
-            log.info("Starting mock server on port {}", portReservation.getPort());
-            portReservation.stop();
-            server.start();
+            tokenFactory = new TenantAnnotationTokenFactory(provider, portReservation);
         }
     }
 }

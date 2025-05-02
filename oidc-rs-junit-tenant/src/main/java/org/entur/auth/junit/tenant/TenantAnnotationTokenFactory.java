@@ -1,9 +1,12 @@
 package org.entur.auth.junit.tenant;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import lombok.Getter;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.JwtTokenFactory;
+import org.entur.auth.PortReservation;
 import org.entur.auth.Provider;
 import org.entur.auth.WireMockAuthenticationServer;
 
@@ -22,25 +25,90 @@ import org.entur.auth.WireMockAuthenticationServer;
  *   <li>{@link org.entur.auth.junit.tenant.PersonTenant}
  * </ul>
  */
-class TenantAnnotationTokenFactory {
-    private final Provider provider;
-    private final JwtTokenFactory jwtTokenFactory;
+@Slf4j
+public class TenantAnnotationTokenFactory {
+    /** The name used for reserving the port for the mock authentication server. */
+    public static final String MOCKAUTHSERVER_PORT_NAME = "MOCKAUTHSERVER_PORT";
 
-    @Getter private final WireMockAuthenticationServer server;
+    private final Provider provider;
+    private final PortReservation portReservation;
+    private JwtTokenFactory jwtTokenFactory;
+    private WireMockAuthenticationServer server;
 
     /**
      * Constructs a new {@code TenantAnnotationTokenFactory}.
      *
      * @param provider the {@link org.entur.auth.Provider} to use when creating tokens
-     * @param jwtTokenFactory the {@link org.entur.auth.JwtTokenFactory} to build the token with
+     * @param portReservation the {@link org.entur.auth.PortReservation} port to use when creating
+     *     mock server
      */
     public TenantAnnotationTokenFactory(
-            final Provider provider,
-            final JwtTokenFactory jwtTokenFactory,
-            final WireMockAuthenticationServer server) {
+            @NonNull final Provider provider, @NonNull final PortReservation portReservation) {
         this.provider = provider;
-        this.jwtTokenFactory = jwtTokenFactory;
+        this.portReservation = portReservation;
+    }
+
+    public WireMockAuthenticationServer getServer() {
+        checkServer();
+        return server;
+    }
+
+    public void setServer(@NonNull WireMockAuthenticationServer server) {
+        if (this.server != null && this.server == server) {
+            return;
+        }
+
+        if (this.server != null) {
+            this.server.close();
+        }
+
+        log.info("Setup mock server on port {}", portReservation.getPort());
+        this.jwtTokenFactory = new JwtTokenFactory(provider);
         this.server = server;
+    }
+
+    public void setServer(@NonNull WireMock wireMock, int port) {
+        if (this.server != null && this.server.getMockServer() == wireMock) {
+            return;
+        }
+
+        if (this.server != null) {
+            this.server.close();
+        }
+
+        log.info("Setup mock server on port {}", portReservation.getPort());
+        this.jwtTokenFactory = new JwtTokenFactory(provider);
+        this.server = new WireMockAuthenticationServer(wireMock, port);
+    }
+
+    public void shutdown() {
+        this.server.close();
+        this.server = null;
+        this.portReservation.start();
+    }
+
+    /**
+     * Creates a bearer JWT token from the given tenant annotation.
+     *
+     * @param tenant the tenant annotation instance, must be one of the supported tenant types: {@link
+     *     org.entur.auth.junit.tenant.PartnerTenant}, {@link
+     *     org.entur.auth.junit.tenant.InternalTenant}, {@link
+     *     org.entur.auth.junit.tenant.TravellerTenant}, or {@link
+     *     org.entur.auth.junit.tenant.PersonTenant}
+     * @return a bearer token string (with prefix {@code "Bearer "})
+     * @throws IllegalArgumentException if the annotation is of an unknown tenant type
+     */
+    public String createToken(final Annotation tenant) {
+        checkServer();
+
+        return createToken(server, jwtTokenFactory, provider, tenant);
+    }
+
+    private void checkServer() {
+        if (this.server == null) {
+            portReservation.stop();
+            setServer(new WireMockAuthenticationServer(portReservation.getPort()));
+        }
     }
 
     /**
@@ -56,7 +124,7 @@ class TenantAnnotationTokenFactory {
      * @return a bearer token string (with prefix {@code "Bearer "})
      * @throws IllegalArgumentException if the annotation is of an unknown tenant type
      */
-    public static String createToken(
+    private static String createToken(
             final WireMockAuthenticationServer server,
             final JwtTokenFactory jwtTokenFactory,
             final Provider provider,
@@ -129,10 +197,12 @@ class TenantAnnotationTokenFactory {
                             .expiresInMinutes(annotation.expiresInMinutes())
                             .claims(
                                     Map.of(
-                                            EnturProvider.CLAIM_AZP, annotation.clientId(),
-                                            EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
+                                            EnturProvider.CLAIM_AZP,
+                                            annotation.clientId(),
+                                            EnturProvider.CLAIM_ORGANISATION_ID,
+                                            annotation.organisationId(),
                                             EnturProvider.CLAIM_SOCIAL_SECURITY_NUMBER,
-                                                    annotation.socialSecurityNumber()))
+                                            annotation.socialSecurityNumber()))
                             .create();
         }
         throw new IllegalArgumentException("Unknown tenant " + tenant);
@@ -147,20 +217,5 @@ class TenantAnnotationTokenFactory {
             jwtTokenFactory.addTenants(provider, tenant);
             jwtTokenFactory.createCertificates().forEach(server::setJsonStubMappings);
         }
-    }
-
-    /**
-     * Creates a bearer JWT token from the given tenant annotation.
-     *
-     * @param tenant the tenant annotation instance, must be one of the supported tenant types: {@link
-     *     org.entur.auth.junit.tenant.PartnerTenant}, {@link
-     *     org.entur.auth.junit.tenant.InternalTenant}, {@link
-     *     org.entur.auth.junit.tenant.TravellerTenant}, or {@link
-     *     org.entur.auth.junit.tenant.PersonTenant}
-     * @return a bearer token string (with prefix {@code "Bearer "})
-     * @throws IllegalArgumentException if the annotation is of an unknown tenant type
-     */
-    public String createToken(final Annotation tenant) {
-        return createToken(server, jwtTokenFactory, provider, tenant);
     }
 }

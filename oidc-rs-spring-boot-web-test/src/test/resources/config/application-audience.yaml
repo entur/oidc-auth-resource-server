@@ -1,0 +1,6 @@
+entur:
+  auth:
+    apis:
+      - issuerUrl: https://partner.mock.entur.io
+        audiences:
+          - https://my.api

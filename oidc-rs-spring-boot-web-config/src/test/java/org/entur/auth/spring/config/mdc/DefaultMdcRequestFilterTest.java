@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class DefaultMdcRequestFilterTest {
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testDefaltMdcForPartner(

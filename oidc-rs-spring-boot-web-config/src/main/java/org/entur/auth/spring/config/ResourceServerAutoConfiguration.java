@@ -4,6 +4,10 @@ import com.nimbusds.jose.jwk.source.JWKSetSourceWithHealthStatusReporting;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.health.HealthReportListener;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.config.authorization.AuthorizationHelper;
@@ -14,9 +18,10 @@ import org.entur.auth.spring.config.cors.CorsProperties;
 import org.entur.auth.spring.config.mdc.MdcProperties;
 import org.entur.auth.spring.config.mdc.MdcRequestFilter;
 import org.entur.auth.spring.config.server.AuthProviders;
-import org.entur.auth.spring.config.server.AuthenticationManagerResolverFactory;
 import org.entur.auth.spring.config.server.DefaultAuthProviders;
 import org.entur.auth.spring.config.server.EnturAuthProperties;
+import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
+import org.entur.auth.spring.config.server.JWKSourceWithIssuer;
 import org.entur.auth.spring.config.server.ServerCondition;
 import org.entur.auth.spring.config.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
@@ -32,6 +37,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 
 /**
@@ -114,9 +120,25 @@ public class ResourceServerAutoConfiguration {
     }
 
     @Conditional(ServerCondition.class)
+    @RequiredArgsConstructor
+    @ConditionalOnMissingBean(AuthProviders.class)
+    public static class AuthProvidersBean {
+
+        @Bean
+        public AuthProviders authProviders() {
+            log.info("Configure DefaultAuthProviders");
+            return new DefaultAuthProviders();
+        }
+    }
+
+    @Conditional(ServerCondition.class)
+    @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
     @EnableConfigurationProperties({EnturAuthProperties.class})
     @RequiredArgsConstructor
     public static class AuthenticationManagerResolverBean {
+        Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
+        List<JWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+
         private final EnturAuthProperties enturAuthProperties;
         private final AuthProviders authProviders;
 
@@ -126,24 +148,32 @@ public class ResourceServerAutoConfiguration {
                 healthReportListener;
 
         @Bean
-        @ConditionalOnMissingBean(AuthenticationManagerResolver.class)
         public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
             log.info("Configure AuthenticationManagerResolver");
             var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
-            return AuthenticationManagerResolverFactory.create(
-                    enturAuthProperties, authProviders, authoritiesConverter, healthReportListener);
-        }
-    }
 
-    @Conditional(ServerCondition.class)
-    @RequiredArgsConstructor
-    @ConditionalOnMissingBean(AuthProviders.class)
-    public static class AuthProvidersBean {
+            var tenantsProperties = enturAuthProperties.getTenants();
+            var issuerProperties = enturAuthProperties.getIssuers();
 
-        @Bean
-        public AuthProviders authProviders() {
-            log.info("Configure DefaultAuthProviders");
-            return new DefaultAuthProviders();
+            if (tenantsProperties.getEnvironment() != null || tenantsProperties.getInclude() != null) {
+                log.info("Tenant environment = {}", tenantsProperties.getEnvironment());
+                log.info("Tenant include = {}", tenantsProperties.getInclude());
+            }
+
+            var environmentIssuerProperties =
+                    authProviders.get(tenantsProperties.getEnvironment(), tenantsProperties.getInclude());
+
+            var managerResolver =
+                    new IssuerAuthenticationManagerResolver(
+                            authenticationManagers,
+                            remoteJWKSets,
+                            enturAuthProperties,
+                            authoritiesConverter,
+                            healthReportListener);
+            environmentIssuerProperties.forEach(managerResolver::addIsser);
+            issuerProperties.forEach(managerResolver::addIsser);
+
+            return managerResolver;
         }
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @ExtendWith({MockitoExtension.class, TenantJsonWebToken.class})
 public class AuthorizationTest {
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testProtectedWithAnonymous() throws Exception {

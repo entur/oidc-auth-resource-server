@@ -1,4 +1,4 @@
-package org.entur.auth.spring.config.authorization;
+package org.entur.auth.spring.test.cors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,32 +13,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+@ActiveProfiles("audience")
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class AuthorizeRequestsTest {
+class CorsCustomAudienceTest {
+
     @Autowired private MockMvc mockMvc;
 
     @Test
-    void testUnprotectedWithAnonymous() throws Exception {
-        mockMvc.perform(get("/unprotected")).andExpect(status().isOk());
-    }
-
-    @Test
-    void testProtectedWithAnonymous() throws Exception {
-        mockMvc.perform(get("/protected")).andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void testProtectedWithPartner(
-            @PartnerTenant(clientId = "clientId", subject = "subject") String token) throws Exception {
+    void testProtectedWithWithKnownCustomAudience(
+            @PartnerTenant(clientId = "abc", audience = "https://my.api") String token) throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         requestHeaders.add("Authorization", token);
 
         mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
+    }
+
+    @Test
+    void testProtectedWithWithUnknownCustomAudience(
+            @PartnerTenant(clientId = "abc", audience = "https://not.my.api") String token)
+            throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", token);
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isUnauthorized());
     }
 }

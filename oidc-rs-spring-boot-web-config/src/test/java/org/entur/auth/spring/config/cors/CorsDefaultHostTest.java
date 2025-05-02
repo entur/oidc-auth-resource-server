@@ -25,7 +25,7 @@ class CorsDefaultHostTest {
             List.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
     private final List<String> hosts = List.of("http://unknown.host");
 
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testCorsOptionsAllowed() {

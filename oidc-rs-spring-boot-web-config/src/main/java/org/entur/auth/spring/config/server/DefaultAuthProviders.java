@@ -97,6 +97,7 @@ public class DefaultAuthProviders implements AuthProviders {
                 .map(
                         issuerProperties ->
                                 !issuerProperties.getCertificateUrl().contains("${MOCKAUTHSERVER_PORT}")
+                                                || System.getProperty("MOCKAUTHSERVER_PORT") == null
                                         ? issuerProperties
                                         : createProvider(
                                                 issuerProperties.getIssuerUrl(),

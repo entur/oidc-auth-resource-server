@@ -1,8 +1,14 @@
 package org.entur.auth.spring.config.server;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class IssuerProperties {
     private String issuerUrl;
     private String certificateUrl;

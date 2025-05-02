@@ -22,7 +22,7 @@ class CorsNoHostTest {
     private final List<HttpMethod> methods =
             List.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
 
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testCorsHostAndMethodAllowed() {

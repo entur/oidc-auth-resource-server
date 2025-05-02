@@ -20,4 +20,8 @@ public class JWKSourceWithIssuer implements JWKSource<SecurityContext> {
             throws KeySourceException {
         return jwkSource.get(jwkSelector, securityContext);
     }
+
+    public boolean getReadiness() {
+        return true;
+    }
 }

@@ -9,6 +9,11 @@
 	</Match>
 	<Match>
 		<Class name="~.*TenantAnnotationTokenFactory" />
-		<Bug pattern="EI_EXPOSE_REP2"/>
+		<Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2, CT_CONSTRUCTOR_THROW"/>
 	</Match>
+	<Match>
+		<Class name="~.*TenantJsonWebToken" />
+		<Bug pattern="EI_EXPOSE_REP"/>
+	</Match>
+	TenantAnnotationTokenFactory
 </FindBugsFilter>

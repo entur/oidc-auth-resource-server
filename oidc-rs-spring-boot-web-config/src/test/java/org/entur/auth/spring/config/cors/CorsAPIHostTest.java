@@ -32,7 +32,7 @@ class CorsAPIHostTest {
                     "https://developer.entur.org",
                     "http://known.host");
 
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testCorsHostAndMethodAllowed() {

@@ -31,7 +31,7 @@ class CorsWebappHostTest {
                     "https://test-entur.devportal.apigee.io",
                     "https://developer.entur.org");
 
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testCorsHostForbidden() {

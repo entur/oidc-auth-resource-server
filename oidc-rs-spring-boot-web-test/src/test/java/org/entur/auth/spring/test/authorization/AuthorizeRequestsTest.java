@@ -3,6 +3,7 @@ package org.entur.auth.spring.test.authorization;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class AuthorizeRequestsTest {
-    @Autowired protected MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     @Test
     void testUnprotectedWithAnonymous() throws Exception {
@@ -40,5 +41,33 @@ class AuthorizeRequestsTest {
         requestHeaders.add("Authorization", token);
 
         mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
+    }
+
+    @Test
+    void testProtectedWithWrongTenant(@InternalTenant(clientId = "clientId") String token)
+            throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", token);
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testProtectedWithWrongToken() throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", "Bearer notValid");
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testProtectedWithNoBearer() throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", "notValid");
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isUnauthorized());
     }
 }
