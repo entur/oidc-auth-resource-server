@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.entur.auth.spring.common.cors.CorsProperties;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.web.cors.CorsConfiguration;

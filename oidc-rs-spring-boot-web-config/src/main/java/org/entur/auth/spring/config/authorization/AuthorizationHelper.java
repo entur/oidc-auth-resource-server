@@ -3,6 +3,10 @@ package org.entur.auth.spring.config.authorization;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.entur.auth.spring.common.authorization.AuthorizationHttpMethodMatcherProperties;
+import org.entur.auth.spring.common.authorization.AuthorizationMatcherProperties;
+import org.entur.auth.spring.common.authorization.AuthorizationPermitAllProperties;
+import org.entur.auth.spring.common.authorization.AuthorizationProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
@@ -44,9 +48,11 @@ public class AuthorizationHelper {
 
         for (AuthorizationHttpMethodMatcherProperties httpMethodMatcher :
                 matchers.getMethod().getActiveMethods()) {
-            authorizeRequests
-                    .requestMatchers(httpMethodMatcher.getVerb(), httpMethodMatcher.getPatternsAsArray())
-                    .permitAll();
+            if (httpMethodMatcher.getPatternsAsArray().length > 0) {
+                authorizeRequests
+                        .requestMatchers(httpMethodMatcher.getVerb(), httpMethodMatcher.getPatternsAsArray())
+                        .permitAll();
+            }
         }
     }
 }

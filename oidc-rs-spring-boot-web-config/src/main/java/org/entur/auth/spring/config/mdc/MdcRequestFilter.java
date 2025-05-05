@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.entur.auth.spring.common.mdc.MdcFromToProperties;
+import org.entur.auth.spring.common.mdc.MdcProperties;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;

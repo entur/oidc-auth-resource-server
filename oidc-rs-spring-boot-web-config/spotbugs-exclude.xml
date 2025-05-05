@@ -1,14 +1,10 @@
 <FindBugsFilter>
 	<Match>
-		<Class name="~org\.entur\.auth\.spring\.config\..*Properties.*" />
-		<Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
-	</Match>
-	<Match>
 		<Class name="~org\.entur\.auth\.spring\.config\..*ResourceServerAutoConfiguration.*" />
 		<Bug pattern="EI_EXPOSE_REP2"/>
 	</Match>
 	<Match>
-		<Class name="~org\.entur\.auth\.spring\.config\..*AuthenticationManagerResolver" />
+		<Class name="~org\.entur\.auth\.spring\.config\.server\..*IssuerAuthenticationManagerResolver" />
 		<Bug pattern="EI_EXPOSE_REP2"/>
 	</Match>
 

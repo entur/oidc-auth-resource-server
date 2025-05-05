@@ -2,9 +2,9 @@ package org.entur.auth.spring.test;
 
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
+import org.entur.auth.spring.common.server.EnturAuthProperties;
+import org.entur.auth.spring.common.server.ServerCondition;
 import org.entur.auth.spring.config.ResourceServerAutoConfiguration;
-import org.entur.auth.spring.config.server.EnturAuthProperties;
-import org.entur.auth.spring.config.server.ServerCondition;
 import org.entur.auth.spring.test.server.EnturAuthTestProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

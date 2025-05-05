@@ -5,7 +5,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.health.HealthReportListener;
 import com.nimbusds.jose.util.health.HealthStatus;
 import lombok.RequiredArgsConstructor;
-import org.entur.auth.spring.config.server.ServerCondition;
+import org.entur.auth.spring.common.server.ServerCondition;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

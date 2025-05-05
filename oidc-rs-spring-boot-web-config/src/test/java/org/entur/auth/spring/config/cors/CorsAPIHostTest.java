@@ -17,7 +17,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@ExtendWith({SpringExtension.class})
+@ExtendWith({
+    SpringExtension.class,
+})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(
         properties = {"entur.auth.cors.mode=api", "entur.auth.cors.hosts=http://known.host"})

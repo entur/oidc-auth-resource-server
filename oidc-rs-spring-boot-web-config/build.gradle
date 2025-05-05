@@ -16,6 +16,7 @@ dependencies {
 
     // Spring
     api project(':oidc-rs-spring-boot-web')
+    api project(':oidc-rs-spring-boot-common')
 
 
     // Other
