@@ -109,7 +109,7 @@ public class ReactiveAuthenticationManagerFactory {
 
             // Create selector
             final JWSVerificationKeySelector<JWKSecurityContext> keySelector;
-            if (enturAuthProperties.getLazyLoad()) {
+            if (Boolean.TRUE.equals(enturAuthProperties.getLazyLoad())) {
                 log.info("Notice: Lazy load of JWKS only supports RSA algorithms");
                 keySelector = new JWSVerificationKeySelector<>(JWSAlgorithm.Family.RSA, jwkSource);
             } else {

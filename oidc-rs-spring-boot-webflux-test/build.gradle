@@ -14,9 +14,11 @@ dependencies {
         implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
     }
 
-    // Springs
-    api project(':oidc-rs-spring-boot-webflux')
-    api project(':oidc-rs-spring-boot-common')
+    // Spring
+    api project(':oidc-rs-spring-boot-webflux-config')
+
+    // Junit
+    api project(':oidc-rs-junit-tenant')
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")

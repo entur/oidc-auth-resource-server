@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -34,7 +33,6 @@ import org.springframework.security.web.server.savedrequest.NoOpServerRequestCac
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class ReactiveResourceServerAutoConfiguration {
 
-    @EnableWebFluxSecurity
     @EnableReactiveMethodSecurity
     @RequiredArgsConstructor
     @ConditionalOnMissingBean(SecurityWebFilterChain.class)
