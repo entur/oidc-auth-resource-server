@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.CorsConfig
 public class DefaultConfigureCors implements ConfigureCors {
     @Override
     public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
-        log.info("Configure DefaultConfigureCors");
+        log.debug("Configure DefaultConfigureCors");
         Customizer.withDefaults().customize(httpSecurityCorsConfigurer);
     }
 }

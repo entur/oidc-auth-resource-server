@@ -10,7 +10,7 @@ public class DefaultConfigureAuth2ResourceServer implements ConfigureAuth2Resour
     @Override
     public void customize(
             OAuth2ResourceServerConfigurer<HttpSecurity> httpSecurityOAuth2ResourceServerConfigurer) {
-        log.info("Configure DefaultConfigureAuth2ResourceServer");
+        log.debug("Configure DefaultConfigureAuth2ResourceServer");
         httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults());
     }
 }

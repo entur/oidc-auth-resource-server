@@ -10,7 +10,7 @@ public class ReactiveDefaultConfigureAuth2ResourceServer
 
     @Override
     public void customize(ServerHttpSecurity.OAuth2ResourceServerSpec oAuth2ResourceServerSpec) {
-        log.info("Configure ReactiveDefaultConfigureAuth2ResourceServer");
+        log.debug("Configure ReactiveDefaultConfigureAuth2ResourceServer");
         oAuth2ResourceServerSpec.jwt(Customizer.withDefaults());
     }
 }

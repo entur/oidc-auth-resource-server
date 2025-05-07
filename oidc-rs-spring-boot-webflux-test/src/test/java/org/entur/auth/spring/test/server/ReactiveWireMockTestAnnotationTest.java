@@ -1,47 +1,43 @@
 package org.entur.auth.spring.test.server;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import jakarta.servlet.http.HttpServletRequest;
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantAnnotationTokenFactory;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.entur.auth.spring.common.server.IssuerProperties;
-import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
+import org.entur.auth.spring.config.server.ReactiveIssuerAuthenticationManagerResolver;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
+import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.server.ServerWebExchange;
 
 @ActiveProfiles("annotation")
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@AutoConfigureWebTestClient
 @WireMockTest
-class WireMockTestAnnotationTest {
-    @Autowired private MockMvc mockMvc;
+class ReactiveWireMockTestAnnotationTest {
+    @Autowired private WebTestClient webTestClient;
 
     @Autowired
-    private AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver;
+    private ReactiveAuthenticationManagerResolver<ServerWebExchange> authenticationManagerResolver;
 
     @BeforeEach
     void beforeEachTests(
             TenantAnnotationTokenFactory annotationTokenFactory, WireMockRuntimeInfo wmRuntimeInfo) {
 
         annotationTokenFactory.setServer(wmRuntimeInfo.getWireMock(), wmRuntimeInfo.getHttpPort());
-        ((IssuerAuthenticationManagerResolver) authenticationManagerResolver)
+        ((ReactiveIssuerAuthenticationManagerResolver) authenticationManagerResolver)
                 .addIssuer(
                         IssuerProperties.builder()
                                 .issuerUrl("https://partner.mock.entur.io")
@@ -54,12 +50,19 @@ class WireMockTestAnnotationTest {
 
     @Test
     void testProtectedWithPartner(
-            @PartnerTenant(clientId = "clientId", subject = "subject") String token) throws Exception {
-        var requestHeaders = new HttpHeaders();
-        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+            @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
 
-        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
+        webTestClient
+                .get()
+                .uri("/protected")
+                .headers(
+                        httpHeaders -> {
+                            httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+                            httpHeaders.add("Authorization", token);
+                        })
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 
     @AfterAll

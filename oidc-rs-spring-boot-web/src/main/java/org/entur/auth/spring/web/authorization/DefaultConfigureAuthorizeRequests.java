@@ -10,7 +10,7 @@ public class DefaultConfigureAuthorizeRequests implements ConfigureAuthorizeRequ
     public void customize(
             AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
                     authorizationManagerRequestMatcherRegistry) {
-        log.info("Configure DefaultConfigureAuthorizeRequests");
+        log.debug("Configure DefaultConfigureAuthorizeRequests");
         authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
     }
 }

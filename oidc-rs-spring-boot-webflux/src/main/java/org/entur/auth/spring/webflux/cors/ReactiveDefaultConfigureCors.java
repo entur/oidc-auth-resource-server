@@ -9,7 +9,7 @@ public class ReactiveDefaultConfigureCors implements ReactiveConfigureCors {
 
     @Override
     public void customize(ServerHttpSecurity.CorsSpec corsSpec) {
-        log.info("Configure ReactiveDefaultConfigureCors");
+        log.debug("Configure ReactiveDefaultConfigureCors");
         Customizer.withDefaults().customize(corsSpec);
     }
 }

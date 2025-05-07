@@ -4,7 +4,7 @@ import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.ServerCondition;
-import org.entur.auth.spring.config.ReactiveResourceServerAutoConfiguration;
+import org.entur.auth.spring.config.ConfigReactiveAuthManagerResolverAutoConfiguration;
 import org.entur.auth.spring.test.server.ReactiveEnturAuthTestProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-@AutoConfigureBefore(ReactiveResourceServerAutoConfiguration.class)
+@AutoConfigureBefore(ConfigReactiveAuthManagerResolverAutoConfiguration.class)
 @Conditional(ServerCondition.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @EnableConfigurationProperties({EnturAuthProperties.class, ReactiveEnturAuthTestProperties.class})

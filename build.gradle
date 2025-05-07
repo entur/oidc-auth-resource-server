@@ -18,7 +18,7 @@ subprojects {
         apacheCommonsCodecVersion = '1.16.1'
         lombokVersion = '1.18.36'
         jjwtVersion = '0.12.6'
-        springBoot3Version = '3.4.3'
+        springBoot3Version = '3.4.5'
         caffeineVersion = "3.2.0"
         jaxbVersion = '4.0.2'
         glassfishJaxbVersion = '4.0.5'

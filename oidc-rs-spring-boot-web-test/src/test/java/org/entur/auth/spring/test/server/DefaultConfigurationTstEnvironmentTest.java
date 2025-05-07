@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
             "entur.auth.tenants.environment=tst",
             "entur.auth.tenants.include=internal,traveller,partner,person",
             "entur.auth.test.load-environments=true",
-            "entur.auth.lazy-load=true" // Test dont need to fetch JWKS
+            "entur.auth.lazy-load=true" // Test don't need to fetch JWKS
         })
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,8 +39,7 @@ class DefaultConfigurationTstEnvironmentTest {
         Assertions.assertInstanceOf(
                 IssuerAuthenticationManagerResolver.class, authenticationManagerResolver);
 
-        IssuerAuthenticationManagerResolver resolver =
-                (IssuerAuthenticationManagerResolver) authenticationManagerResolver;
+        var resolver = (IssuerAuthenticationManagerResolver) authenticationManagerResolver;
 
         var issuers = resolver.getIssuers();
 

@@ -15,7 +15,7 @@ public class DefaultMdcRequestFilter extends OncePerRequestFilter
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("Configure DefaultMdcRequestFilter");
+        log.debug("Configure DefaultMdcRequestFilter");
         filterChain.doFilter(request, response);
     }
 }

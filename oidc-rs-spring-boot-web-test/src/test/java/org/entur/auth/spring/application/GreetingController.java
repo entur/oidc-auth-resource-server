@@ -2,6 +2,7 @@ package org.entur.auth.spring.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,13 @@ public class GreetingController {
 
     @GetMapping("/protected")
     public String getProtected() {
+        log.info("Get protected method with GET");
+        return "Hello from protected";
+    }
+
+    @GetMapping("/internal")
+    @PreAuthorize("hasAnyAuthority('internal')")
+    public String getsProtected() {
         log.info("Get protected method with GET");
         return "Hello from protected";
     }

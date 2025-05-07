@@ -69,7 +69,7 @@ public final class ReactiveIssuerAuthenticationManagerResolver
         return remoteJWKSets.stream().allMatch(ReactiveJWKSourceWithIssuer::getReadiness);
     }
 
-    public void addIsser(@NonNull IssuerProperties issuerProperties) {
+    public void addIssuer(@NonNull IssuerProperties issuerProperties) {
         if (remoteJWKSets.stream()
                 .anyMatch(
                         jwkSourceWithIssuer ->

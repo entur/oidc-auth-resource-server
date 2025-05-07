@@ -14,6 +14,6 @@ public class CorsCondition implements Condition {
                 Binder.get(context.getEnvironment())
                         .bind("entur.auth.cors", CorsProperties.class)
                         .orElse(null);
-        return properties != null;
+        return (properties != null && properties.isEnabled());
     }
 }

@@ -3,9 +3,9 @@ package org.entur.auth.spring.test.authorization;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
+import org.entur.auth.junit.tenant.TravellerTenant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ class AuthorizeRequestsTest {
     }
 
     @Test
-    void testProtectedWithWrongTenant(@InternalTenant(clientId = "clientId") String token)
+    void testProtectedWithWrongTenant(@TravellerTenant(clientId = "clientId") String token)
             throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);

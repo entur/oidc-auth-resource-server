@@ -11,7 +11,7 @@ public class ReactiveDefaultMdcRequestFilter implements ReactiveConfigureMdcRequ
     @Override
     @NonNull
     public Mono<Void> filter(@NonNull ServerWebExchange exchange, WebFilterChain chain) {
-        log.info("Configure ReactiveDefaultMdcRequestFilter");
+        log.debug("Configure ReactiveDefaultMdcRequestFilter");
         return chain.filter(exchange);
     }
 }

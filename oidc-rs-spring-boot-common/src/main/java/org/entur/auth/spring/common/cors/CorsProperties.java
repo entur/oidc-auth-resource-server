@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "entur.auth.cors")
 public class CorsProperties {
+    private boolean enabled = true;
     private String mode;
     private List<String> hosts = new ArrayList<>();
 }

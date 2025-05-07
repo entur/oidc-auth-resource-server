@@ -11,4 +11,7 @@ entur:
             - /unprotected
     tenants:
       environment: mock
-      include: partner
+      include: partner, internal
+logging:
+  level:
+    root: debug

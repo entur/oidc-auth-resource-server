@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnEnabledHealthIndicator("jwks")
 @RequiredArgsConstructor
-public class ReactiveJwksHealthIndicatorAutoConfiguration implements HealthIndicator {
+public class ConfigReactiveJwksHealthIndicatorAutoConfiguration implements HealthIndicator {
     final Health.Builder status = Health.up();
 
     /**

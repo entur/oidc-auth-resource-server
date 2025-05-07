@@ -9,7 +9,7 @@ public class ReactiveDefaultConfigureAuthorizeExchange
 
     @Override
     public void customize(ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec) {
-        log.info("Configure ReactiveDefaultConfigureAuthorizeExchange");
+        log.debug("Configure ReactiveDefaultConfigureAuthorizeExchange");
         authorizeExchangeSpec.anyExchange().authenticated();
     }
 }
