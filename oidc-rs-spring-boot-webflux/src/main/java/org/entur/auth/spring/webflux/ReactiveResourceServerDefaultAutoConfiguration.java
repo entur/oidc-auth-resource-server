@@ -5,10 +5,14 @@ import org.entur.auth.spring.webflux.autorization.ReactiveConfigureAuthorizeExch
 import org.entur.auth.spring.webflux.autorization.ReactiveDefaultConfigureAuthorizeExchange;
 import org.entur.auth.spring.webflux.cors.ReactiveConfigureCors;
 import org.entur.auth.spring.webflux.cors.ReactiveDefaultConfigureCors;
+import org.entur.auth.spring.webflux.csrf.ReactiveConfigureCsrf;
+import org.entur.auth.spring.webflux.csrf.ReactiveDefaultConfigureCsrf;
 import org.entur.auth.spring.webflux.mdc.ReactiveConfigureMdcRequestFilter;
 import org.entur.auth.spring.webflux.mdc.ReactiveDefaultMdcRequestFilter;
 import org.entur.auth.spring.webflux.server.ReactiveConfigureAuth2ResourceServer;
 import org.entur.auth.spring.webflux.server.ReactiveDefaultConfigureAuth2ResourceServer;
+import org.entur.auth.spring.webflux.sesssion.ReactiveConfigureSessionManagement;
+import org.entur.auth.spring.webflux.sesssion.ReactiveDefaultConfigureSessionManagement;
 import org.entur.auth.spring.webflux.user.ReactiveNoUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -30,6 +34,18 @@ public class ReactiveResourceServerDefaultAutoConfiguration {
     @ConditionalOnMissingBean(ReactiveConfigureAuthorizeExchange.class)
     public ReactiveConfigureAuthorizeExchange reactiveConfigureAuthorizeExchange() {
         return new ReactiveDefaultConfigureAuthorizeExchange();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ReactiveConfigureSessionManagement.class)
+    public ReactiveConfigureSessionManagement reactiveConfigureSessionManagement() {
+        return new ReactiveDefaultConfigureSessionManagement();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ReactiveConfigureCsrf.class)
+    public ReactiveConfigureCsrf reactiveConfigureCsrf() {
+        return new ReactiveDefaultConfigureCsrf();
     }
 
     @Bean
