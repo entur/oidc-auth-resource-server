@@ -39,7 +39,7 @@ public class JwtTokenFactoryTest {
         assertThat(decode.getClaim(Provider.CLAIM_AZP).asString()).isEqualTo("ABC");
         assertThat(decode.getClaim(Provider.CLAIM_PREFERRED_USERNAME).asString())
                 .isEqualTo("myUsername");
-        assertThat(decode.getAudience().getFirst()).isEqualTo("https://api.dev.entur.io");
+        assertThat(decode.getAudience().get(0)).isEqualTo("https://api.dev.entur.io");
         assertThat(decode.getIssuer()).contains(DOMAIN_TENANT);
     }
 }
