@@ -19,6 +19,10 @@ public class PortReservation {
     private final int portRangeStart;
     private final int portRangeEnd;
 
+    private final String propertyName;
+    private int port = -1;
+    private ServerSocket serverSocket;
+
     public PortReservation(String portNames) {
         this(PORT_RANGE_START, PORT_RANGE_END, portNames);
     }
@@ -30,18 +34,15 @@ public class PortReservation {
         this.propertyName = portName;
     }
 
-    private final String propertyName;
-    private int port = -1;
-    private ServerSocket serverSocket;
-
-    private void reserved(int port, ServerSocket serverSocket) {
-        this.port = port;
-        this.serverSocket = serverSocket;
-
-        System.setProperty(propertyName, Integer.toString(port));
+    public int getPort() {
+        return port;
     }
 
-    public boolean start() {
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public synchronized boolean start() {
         if (portRangeStart <= 0) {
             throw new IllegalArgumentException("Port range start must be greater than 0.");
         }
@@ -55,7 +56,7 @@ public class PortReservation {
         // check if the property already exists, if so it must be free
         String property = System.getProperty(propertyName);
         if (property != null) {
-            if (reserve(Integer.parseInt(property))) {
+            if (reserve(Integer.parseInt(property), true)) {
                 log.warn("Reserved previously configured port " + property);
                 return true;
             } else {
@@ -72,7 +73,7 @@ public class PortReservation {
 
         for (int i = 0; i < portRange; i++) {
             int candidatePort = portRangeStart + (offset + portRange) % portRange;
-            if (reserve(candidatePort)) {
+            if (reserve(candidatePort, false)) {
                 log.warn("Reserved newly configured port " + candidatePort);
                 return true;
             }
@@ -80,29 +81,7 @@ public class PortReservation {
         throw new IllegalArgumentException("Unable to reserve free port");
     }
 
-    private boolean reserve(int candidatePort) {
-        try {
-            ServerSocket result = capturePort(candidatePort);
-            if (result != null) {
-                reserved(candidatePort, result);
-
-                return true;
-            }
-        } catch (Exception e) {
-            // continue
-        }
-        return false;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void stop() {
+    public synchronized void stop() {
         ServerSocket serverSocket = this.serverSocket;
         if (serverSocket != null) {
             try {
@@ -113,6 +92,38 @@ public class PortReservation {
 
             this.serverSocket = null;
         }
+    }
+
+    private boolean reserve(int candidatePort, boolean retry) {
+        // Retry on failure, 10 times.
+        for (int i = 0; i < 10; i++) {
+            try {
+                ServerSocket result = capturePort(candidatePort);
+                if (result != null) {
+                    reserved(candidatePort, result);
+                    return true;
+                }
+            } catch (Exception e) {
+                if (!retry) {
+                    return false;
+                }
+            }
+
+            try {
+                wait(1000); // Wait 1 second
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return false;
+    }
+
+    private void reserved(int port, ServerSocket serverSocket) {
+        this.port = port;
+        this.serverSocket = serverSocket;
+
+        System.setProperty(propertyName, Integer.toString(port));
     }
 
     private static ServerSocket capturePort(int port) {
