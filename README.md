@@ -236,25 +236,31 @@ public class ResourceServerDefaultAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(ConfigureAuthorizeRequests.class)
     public ConfigureAuthorizeRequests configureAuthorizeRequests() {
         return new MyConfigureAuthorizeRequests();
     }
 
     @Bean
-    @ConditionalOnMissingBean(ConfigureCors.class)
+    public ConfigureSessionManagement configureSessionManagement() {
+        return new MyConfigureSessionManagement();
+    }
+
+    @Bean
+    public ConfigureCsrf configureCsrf() {
+        return new MyConfigureCsrf();
+    }
+
+    @Bean
     public ConfigureCors configureCors() {
         return new MyConfigureCors();
     }
 
     @Bean
-    @ConditionalOnMissingBean(ConfigureMdcRequestFilter.class)
     public ConfigureMdcRequestFilter configureMdcRequestFilter() {
         return new MyMdcRequestFilter();
     }
 
     @Bean
-    @ConditionalOnMissingBean(ConfigureAuth2ResourceServer.class)
     public ConfigureAuth2ResourceServer configureAuth2ResourceServer() {
         return new MyConfigureAuth2ResourceServer();
     }

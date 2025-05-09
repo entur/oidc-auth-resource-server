@@ -5,10 +5,14 @@ import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
 import org.entur.auth.spring.web.authorization.DefaultConfigureAuthorizeRequests;
 import org.entur.auth.spring.web.cors.ConfigureCors;
 import org.entur.auth.spring.web.cors.DefaultConfigureCors;
+import org.entur.auth.spring.web.csrf.ConfigureCsrf;
+import org.entur.auth.spring.web.csrf.DefaultConfigureCsrf;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
 import org.entur.auth.spring.web.mdc.DefaultMdcRequestFilter;
 import org.entur.auth.spring.web.server.ConfigureAuth2ResourceServer;
 import org.entur.auth.spring.web.server.DefaultConfigureAuth2ResourceServer;
+import org.entur.auth.spring.web.session.ConfigureSessionManagement;
+import org.entur.auth.spring.web.session.DefaultConfigureSessionManagement;
 import org.entur.auth.spring.web.user.NoUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -30,6 +34,18 @@ public class ResourceServerDefaultAutoConfiguration {
     @ConditionalOnMissingBean(ConfigureAuthorizeRequests.class)
     public ConfigureAuthorizeRequests configureAuthorizeRequests() {
         return new DefaultConfigureAuthorizeRequests();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ConfigureSessionManagement.class)
+    public ConfigureSessionManagement configureSessionManagement() {
+        return new DefaultConfigureSessionManagement();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ConfigureCsrf.class)
+    public ConfigureCsrf configureCsrf() {
+        return new DefaultConfigureCsrf();
     }
 
     @Bean

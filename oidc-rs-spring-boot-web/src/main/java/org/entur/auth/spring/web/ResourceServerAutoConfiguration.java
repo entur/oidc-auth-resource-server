@@ -1,13 +1,13 @@
 package org.entur.auth.spring.web;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.web.authorization.ConfigureAuthorizeRequests;
 import org.entur.auth.spring.web.cors.ConfigureCors;
+import org.entur.auth.spring.web.csrf.ConfigureCsrf;
 import org.entur.auth.spring.web.mdc.ConfigureMdcRequestFilter;
 import org.entur.auth.spring.web.server.ConfigureAuth2ResourceServer;
+import org.entur.auth.spring.web.session.ConfigureSessionManagement;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
@@ -33,15 +33,16 @@ public class ResourceServerAutoConfiguration {
     private final ConfigureMdcRequestFilter configureMdcRequestFilter;
     private final ConfigureAuthorizeRequests configureAuthorizeRequests;
     private final ConfigureAuth2ResourceServer configureAuth2ResourceServer;
+    private final ConfigureSessionManagement configureSessionManagement;
+    private final ConfigureCsrf configureCsrf;
     private final ConfigureCors configureCors;
     private final HttpSecurity http;
 
     @Bean
     public SecurityFilterChain filterChain() throws ResourceServerConfigurationException {
         try {
-            return http.sessionManagement(
-                            sessionManager -> sessionManager.sessionCreationPolicy(STATELESS))
-                    .csrf(AbstractHttpConfigurer::disable)
+            return http.sessionManagement(configureSessionManagement)
+                    .csrf(configureCsrf)
                     .formLogin(AbstractHttpConfigurer::disable)
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .logout(AbstractHttpConfigurer::disable)
