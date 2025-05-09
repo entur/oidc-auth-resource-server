@@ -7,46 +7,34 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to configure and generate a JSON Web Token (JWT) for a person tenant.
- * <p>
- * This annotation can be applied to method parameters in JUnit tests to specify the token properties
- * for a person tenant. Default values are provided for client identifier, organisation identifier,
- * social security number, audience, and token validity duration.
- * </p>
+ *
+ * <p>This annotation can be applied to method parameters in JUnit tests to specify the token
+ * properties for a person tenant. Default values are provided for client identifier, organisation
+ * identifier, social security number, audience, and token validity duration.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface PersonTenant {
 
-    /**
-     * The default client identifier for a person tenant.
-     */
+    /** The default client identifier for a person tenant. */
     String DEFAULT_CLIENT_ID = "myPersonClientId";
 
-    /**
-     * The default organisation identifier for a person tenant.
-     */
+    /** The default organisation identifier for a person tenant. */
     long DEFAULT_ORGANISATION_ID = 123L;
 
-    /**
-     * The default social security number for a person tenant.
-     */
+    /** The default social security number for a person tenant. */
     String DEFAULT_SOCIAL_SECURITY_NUMBER = "11223355555";
 
-    /**
-     * The default token validity duration in minutes.
-     */
+    /** The default token validity duration in minutes. */
     int DEFAULT_TOKEN_VALID_IN_MINUTES = 5;
 
-    /**
-     * The default audience for the token.
-     */
+    /** The default audience for the token. */
     String DEFAULT_AUDIENCE = "https://api.dev.entur.io";
 
     /**
      * Returns the organisation identifier for the person tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_ORGANISATION_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_ORGANISATION_ID}.
      *
      * @return the organisation id
      */
@@ -54,9 +42,8 @@ public @interface PersonTenant {
 
     /**
      * Returns the client identifier for the person tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_CLIENT_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_CLIENT_ID}.
      *
      * @return the client id
      */
@@ -64,9 +51,8 @@ public @interface PersonTenant {
 
     /**
      * Returns the social security number for the person tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_SOCIAL_SECURITY_NUMBER}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_SOCIAL_SECURITY_NUMBER}.
      *
      * @return the social security number
      */
@@ -74,9 +60,8 @@ public @interface PersonTenant {
 
     /**
      * Returns the audience for the token.
-     * <p>
-     * Defaults to {@link #DEFAULT_AUDIENCE}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_AUDIENCE}.
      *
      * @return the audience
      */
@@ -84,12 +69,10 @@ public @interface PersonTenant {
 
     /**
      * Returns the token validity duration in minutes.
-     * <p>
-     * Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
      *
      * @return the token expiration time in minutes
      */
     int expiresInMinutes() default DEFAULT_TOKEN_VALID_IN_MINUTES;
-
 }

@@ -1,0 +1,2 @@
+org.entur.auth.spring.webflux.ReactiveResourceServerDefaultAutoConfiguration
+org.entur.auth.spring.webflux.ReactiveResourceServerAutoConfiguration

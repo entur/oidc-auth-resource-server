@@ -1,0 +1,15 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\..*AutoConfiguration" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\..*AutoConfiguration.*" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+	<Match>
+		<Class name="~org\.entur\.auth\.spring\.config\.server\..*IssuerAuthenticationManagerResolver" />
+		<Bug pattern="EI_EXPOSE_REP2"/>
+	</Match>
+
+</FindBugsFilter>

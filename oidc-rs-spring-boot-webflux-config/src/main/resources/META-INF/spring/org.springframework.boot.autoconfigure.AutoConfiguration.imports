@@ -1,0 +1,3 @@
+org.entur.auth.spring.config.ConfigReactiveJwksHealthIndicatorAutoConfiguration
+org.entur.auth.spring.config.ConfigReactiveAuthProvidersAutoConfiguration
+org.entur.auth.spring.config.ConfigReactiveAuthManagerResolverAutoConfiguration

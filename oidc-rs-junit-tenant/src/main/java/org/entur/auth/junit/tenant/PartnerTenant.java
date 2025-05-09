@@ -7,61 +7,44 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to configure and generate a JSON Web Token (JWT) for a partner tenant.
- * <p>
- * This annotation can be applied to method parameters in JUnit tests to specify the token properties
- * for a partner tenant. It defines default values for client identifier, organisation identifier,
- * username, audience, email, subject, email verification status, permissions, and token validity duration.
- * </p>
+ *
+ * <p>This annotation can be applied to method parameters in JUnit tests to specify the token
+ * properties for a partner tenant. It defines default values for client identifier, organisation
+ * identifier, username, audience, email, subject, email verification status, permissions, and token
+ * validity duration.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface PartnerTenant {
 
-    /**
-     * The default client identifier for a partner tenant.
-     */
+    /** The default client identifier for a partner tenant. */
     String DEFAULT_CLIENT_ID = "myPartnerClientId";
 
-    /**
-     * The default organisation identifier for a partner tenant.
-     */
-   long DEFAULT_ORGANISATION_ID = 123L;
+    /** The default organisation identifier for a partner tenant. */
+    long DEFAULT_ORGANISATION_ID = 123L;
 
-    /**
-     * The default username for a partner tenant.
-     */
+    /** The default username for a partner tenant. */
     String DEFAULT_USERNAME = "myPartnerUsername";
 
-    /**
-     * The default token validity duration in minutes.
-     */
+    /** The default token validity duration in minutes. */
     int DEFAULT_TOKEN_VALID_IN_MINUTES = 5;
 
-    /**
-     * The default audience for the token.
-     */
+    /** The default audience for the token. */
     String DEFAULT_AUDIENCE = "https://api.dev.entur.io";
 
-    /**
-     * The default email address for a partner tenant.
-     */
+    /** The default email address for a partner tenant. */
     String DEFAULT_EMAIL = "myPartner@email.com";
 
-    /**
-     * The default email verification status for a partner tenant.
-     */
+    /** The default email verification status for a partner tenant. */
     boolean DEFAULT_EMAIL_VERIFIED = true;
 
-    /**
-     * The default subject for the token.
-     */
+    /** The default subject for the token. */
     String DEFAULT_SUBJECT = "myPartnerSubject";
 
     /**
      * The organisation identifier for the partner tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_ORGANISATION_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_ORGANISATION_ID}.
      *
      * @return the organisation id
      */
@@ -69,9 +52,8 @@ public @interface PartnerTenant {
 
     /**
      * The client identifier for the partner tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_CLIENT_ID}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_CLIENT_ID}.
      *
      * @return the client id
      */
@@ -79,9 +61,8 @@ public @interface PartnerTenant {
 
     /**
      * The username for the partner tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_USERNAME}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_USERNAME}.
      *
      * @return the username
      */
@@ -89,9 +70,8 @@ public @interface PartnerTenant {
 
     /**
      * The audience for the token.
-     * <p>
-     * Defaults to {@link #DEFAULT_AUDIENCE}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_AUDIENCE}.
      *
      * @return the audience
      */
@@ -99,9 +79,8 @@ public @interface PartnerTenant {
 
     /**
      * The email address for the partner tenant.
-     * <p>
-     * Defaults to {@link #DEFAULT_EMAIL}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_EMAIL}.
      *
      * @return the email address
      */
@@ -109,9 +88,8 @@ public @interface PartnerTenant {
 
     /**
      * The subject for the token.
-     * <p>
-     * Defaults to {@link #DEFAULT_SUBJECT}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_SUBJECT}.
      *
      * @return the subject
      */
@@ -119,9 +97,8 @@ public @interface PartnerTenant {
 
     /**
      * Indicates whether the email is verified.
-     * <p>
-     * Defaults to {@link #DEFAULT_EMAIL_VERIFIED}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_EMAIL_VERIFIED}.
      *
      * @return {@code true} if the email is verified; {@code false} otherwise
      */
@@ -129,9 +106,8 @@ public @interface PartnerTenant {
 
     /**
      * The permissions associated with the partner tenant.
-     * <p>
-     * Defaults to an empty array.
-     * </p>
+     *
+     * <p>Defaults to an empty array.
      *
      * @return an array of permission strings
      */
@@ -139,12 +115,10 @@ public @interface PartnerTenant {
 
     /**
      * The token validity duration in minutes.
-     * <p>
-     * Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
-     * </p>
+     *
+     * <p>Defaults to {@link #DEFAULT_TOKEN_VALID_IN_MINUTES}.
      *
      * @return the token expiration time in minutes
      */
     int expiresInMinutes() default DEFAULT_TOKEN_VALID_IN_MINUTES;
-
 }

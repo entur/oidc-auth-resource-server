@@ -1,0 +1,17 @@
+server:
+  port: 9010
+
+entur:
+  auth:
+    lazy-load: true
+    authorization:
+      permit-all:
+        matcher:
+          patterns:
+            - /unprotected
+    tenants:
+      environment: mock
+      include: partner, internal
+logging:
+  level:
+    root: debug

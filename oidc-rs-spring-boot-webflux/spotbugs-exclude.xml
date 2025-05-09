@@ -1,0 +1,6 @@
+<FindBugsFilter>
+    <Match>
+        <Class name="~org\.entur\.auth\.spring\.webflux\..*AutoConfiguration" />
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>

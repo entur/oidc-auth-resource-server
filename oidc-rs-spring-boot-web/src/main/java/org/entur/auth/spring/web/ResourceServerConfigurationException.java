@@ -1,8 +1,6 @@
 package org.entur.auth.spring.web;
 
-/**
- * Custom exception class for handling configuration issues.
- */
+/** Custom exception class for handling configuration issues. */
 public class ResourceServerConfigurationException extends Exception {
 
     /**

@@ -39,7 +39,7 @@ publishing {
 
             pom {
                 name = project.name
-                description = "A Java and Spring Boot library for obtaining client tokens from an OIDC provider"
+                description = "A Java / Spring Boot library that makes it trivial to protect HTTP endpoints with OAuth 2.0 / OpenID Connect (OIDC) access tokens."
                 packaging = 'jar'
 
                 url = "https://github.com/entur/${rootProject.name}"

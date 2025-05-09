@@ -14,10 +14,6 @@ dependencies {
         implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
     }
 
-    api project(':oidc-rs-nimbus')
-    api project(':oidc-rs-spring-boot-config')
-    testImplementation project(':oidc-rs-junit-tenant')
-
     // Spring
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBoot3Version}")
     api("org.springframework.boot:spring-boot-starter-web:${springBoot3Version}")
@@ -28,6 +24,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     // Testing
+    testImplementation project(':oidc-rs-junit-tenant')
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
