@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "09:00"
+      timezone: "Europe/Oslo"
+      day: "monday"
+    open-pull-requests-limit: 2
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "09:00"
+      timezone: "Europe/Oslo"
+      day: "monday"
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      major-updates:
+        applies-to: version-updates
+        update-types:
+          - "major"
+    open-pull-requests-limit: 2

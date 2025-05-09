@@ -25,7 +25,9 @@ public class TenantJwtGrantedAuthoritiesConverter
         }
 
         var tenant = authProviders.getTenant(source.getIssuer().getAuthority());
-        grantedAuthorities.add(new SimpleGrantedAuthority(tenant));
+        if (tenant != null) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(tenant));
+        }
 
         return grantedAuthorities;
     }

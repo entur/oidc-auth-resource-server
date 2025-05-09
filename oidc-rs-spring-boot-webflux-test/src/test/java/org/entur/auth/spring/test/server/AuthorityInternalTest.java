@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -21,18 +20,14 @@ public class AuthorityInternalTest {
 
     @Test
     void testInternalWithPartner(
-            @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
-        var requestHeaders = new HttpHeaders();
-        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
-
+            @PartnerTenant(clientId = "clientId", subject = "subject") String authorization) {
         webTestClient
                 .get()
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {
                             httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-                            httpHeaders.add("Authorization", token);
+                            httpHeaders.add("Authorization", authorization);
                         })
                 .exchange()
                 .expectStatus()
@@ -40,18 +35,14 @@ public class AuthorityInternalTest {
     }
 
     @Test
-    void testInternalWithInternal(@InternalTenant(clientId = "clientId") String token) {
-        var requestHeaders = new HttpHeaders();
-        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
-
+    void testInternalWithInternal(@InternalTenant(clientId = "clientId") String authorization) {
         webTestClient
                 .get()
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {
                             httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-                            httpHeaders.add("Authorization", token);
+                            httpHeaders.add("Authorization", authorization);
                         })
                 .exchange()
                 .expectStatus()

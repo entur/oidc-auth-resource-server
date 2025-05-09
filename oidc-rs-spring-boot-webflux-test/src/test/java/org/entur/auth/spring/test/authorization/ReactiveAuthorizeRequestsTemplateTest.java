@@ -29,10 +29,10 @@ class ReactiveAuthorizeRequestsTemplateTest {
 
     @Test
     void testProtectedWithPartner(
-            @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
+            @PartnerTenant(clientId = "clientId", subject = "subject") String authorization) {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+        requestHeaders.add("Authorization", authorization);
         HttpEntity<String> entity = new HttpEntity<>(requestHeaders);
 
         String url = "http://localhost:" + randomServerPort + "/protected";

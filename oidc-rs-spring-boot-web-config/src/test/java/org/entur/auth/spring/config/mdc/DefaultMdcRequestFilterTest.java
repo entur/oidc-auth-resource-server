@@ -30,11 +30,11 @@ class DefaultMdcRequestFilterTest {
     @Test
     void testDefaltMdcForPartner(
             @PartnerTenant(clientId = "clientId1234", subject = "subject", organisationId = 1234L)
-                    String token)
+                    String authorization)
             throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+        requestHeaders.add("Authorization", authorization);
 
         Logger logger = (Logger) LoggerFactory.getLogger("org.entur.auth.spring.application");
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();

@@ -27,21 +27,22 @@ class CorsCustomAudienceTest {
 
     @Test
     void testProtectedWithWithKnownCustomAudience(
-            @PartnerTenant(clientId = "abc", audience = "https://my.api") String token) throws Exception {
+            @PartnerTenant(clientId = "abc", audience = "https://my.api") String authorization)
+            throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+        requestHeaders.add("Authorization", authorization);
 
         mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
     }
 
     @Test
     void testProtectedWithWithUnknownCustomAudience(
-            @PartnerTenant(clientId = "abc", audience = "https://not.my.api") String token)
+            @PartnerTenant(clientId = "abc", audience = "https://not.my.api") String authorization)
             throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+        requestHeaders.add("Authorization", authorization);
 
         mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isUnauthorized());
     }

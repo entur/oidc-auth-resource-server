@@ -28,10 +28,11 @@ public class AuthorizationTest {
 
     @Test
     void testProtectedWithPartner(
-            @PartnerTenant(clientId = "clientId", subject = "subject") String token) throws Exception {
+            @PartnerTenant(clientId = "clientId", subject = "subject") String authorization)
+            throws Exception {
         var requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("Authorization", token);
+        requestHeaders.add("Authorization", authorization);
 
         mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
     }
