@@ -1,6 +1,5 @@
 # oidc-auth-resource-server
-**oidc-auth-resource-server** is a Java / Spring Boot library that makes it trivial to protect HTTP endpoints with OAuth 2.0 / OpenID Connect (OIDC) access tokens.  
-It handles JWT validation, JWK-set caching, opaque-token introspection, and multi-tenant setups for both **Spring MVC** and **WebFlux** applications.
+**oidc-auth-resource-server** is a Java / Spring Boot library that makes it trivial to protect HTTP endpoints with OAuth 2.0 / OpenID Connect (OIDC) access tokens. It handles JWT validation, JWK-set caching, opaque-token introspection, and multi-tenant setups for both **Spring MVC** and **WebFlux** applications.
 
 ## Modules
 | Gradle sub-project                   | Purpose                                                                 |
@@ -223,7 +222,7 @@ entur:
         certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
 ```
 
-Example og JUnit test:
+Example of JUnit test:
 
 ```java
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
@@ -296,9 +295,9 @@ git clone https://github.com/entur/oidc-auth-resource-server.git
 cd oidc-auth-client
 ```
 
-Build with Gradle:
+Build and run JUnit tests:
 ```bash
-./gradlew build       # runs unit + integration tests
+./gradlew build
 ```
 
 ## Contributing

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 public class DefaultAuthProviders implements AuthProviders {
     private static final Map<String, List<IssuerProperties>> issuers;
@@ -123,9 +125,26 @@ public class DefaultAuthProviders implements AuthProviders {
                         .anyMatch(item -> provider.getIssuerUrl().contains(String.format("/%s", item)));
     }
 
-    @NonNull
     public String getTenant(String authority) {
+        return getTenantFromString(authority);
+    }
+
+    public static String getTenant(Authentication authentication) {
+        String tenant = null;
+        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+            tenant = getTenantFromString(jwtAuthenticationToken.getToken().getIssuer().getAuthority());
+        }
+
+        return tenant;
+    }
+
+    private static String getTenantFromString(String authority) {
         final String result;
+
+        if (authority == null) {
+            return null;
+        }
+
         if (authority.startsWith("partner.")) {
             result = "partner";
         } else if (authority.startsWith("internal.")) {
@@ -135,7 +154,7 @@ public class DefaultAuthProviders implements AuthProviders {
         } else if (authority.startsWith("person.")) {
             result = "person";
         } else {
-            result = "unknown";
+            result = null;
         }
 
         return result;

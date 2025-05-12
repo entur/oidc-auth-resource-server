@@ -64,6 +64,7 @@ public class JwtConverter {
         return jwt == null ? null : jwt.getClaimAsString("preferred_username");
     }
 
+    @NonNull
     public static Jwt getJwt(@NonNull String accessToken) throws ParseException {
         JWT jwt = JWTParser.parse(accessToken);
         Map<String, Object> headers = new HashMap<>();
