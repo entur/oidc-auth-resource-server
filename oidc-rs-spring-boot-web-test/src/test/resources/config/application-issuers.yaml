@@ -1,0 +1,13 @@
+entur:
+  auth:
+    test.load-issuers: true     # Needed since oidc-rs-spring-boot-web-test deletes issuers by default
+    issuers:
+      - issuerUrl: https://internal.mock.entur.io
+        certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/internal/.well-known/jwks.json
+      - issuerUrl: https://partner.mock.entur.io
+        certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
+
+    # Added to clear mock setting i application.yaml.
+    tenants:
+      environment: dev
+      include: partner

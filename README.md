@@ -200,9 +200,31 @@ entur:
 
 
 ## Testing
-Local testing with jwt generation is supported with JUnit integration. 
+Local testing with jwt generation is supported with JUnit integration.
 
-Example:
+First configure Spring Security to use a local web server for JWKS:
+```yaml
+entur:
+  auth:
+    tenants:
+      environment: mock
+      include: partner, internal
+```
+Or by:
+```yaml
+entur:
+  auth:
+    test.load-issuers: true     # Needed since oidc-rs-spring-boot-web-test deletes issuers by default 
+    # load-environments: true   # Setting to tell oidc-rs-spring-boot-web-test not clear tenant environment 
+    issuers:
+      - issuerUrl: https://internal.mock.entur.io
+        certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/internal/.well-known/jwks.json
+      - issuerUrl: https://partner.mock.entur.io
+        certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
+```
+
+Example og JUnit test:
+
 ```java
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
