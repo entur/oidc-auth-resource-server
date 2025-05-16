@@ -2,7 +2,7 @@ package org.entur.auth.junit.tenant;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import java.lang.annotation.Annotation;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.PortReservation;
@@ -41,12 +41,13 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
      * Map of Tenant identifiers supported by the JWT token factory -> tenant-specific annotation
      * types that this extension supports.
      */
-    private static final Map<String, Class<? extends Annotation>> TENANT_MAP =
-            Map.of(
-                    EnturProvider.TENANT_PARTNER, PartnerTenant.class,
-                    EnturProvider.TENANT_INTERNAL, InternalTenant.class,
-                    EnturProvider.TENANT_TRAVELLER, TravellerTenant.class,
-                    EnturProvider.TENANT_PERSON, PersonTenant.class);
+    private static final List<Class<? extends Annotation>> TENANT_LIST =
+            List.of(
+                    PartnerTenant.class,
+                    InternalTenant.class,
+                    TravellerTenant.class,
+                    PersonTenant.class,
+                    TenantToken.class);
 
     private static TenantAnnotationTokenFactory tokenFactory;
     private static PortReservation portReservation;
@@ -77,19 +78,19 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     public boolean supportsParameter(
             ParameterContext parameterContext, ExtensionContext extensionContext)
             throws ParameterResolutionException {
-        for (Class<? extends Annotation> c : TENANT_MAP.values()) {
-            if (parameterContext.findAnnotation(c).isPresent()) {
-                return true;
-            }
-        }
 
-        if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
+        if (parameterContext.getParameter().getType() == String.class) {
+            for (Class<? extends Annotation> c : TENANT_LIST) {
+                if (parameterContext.findAnnotation(c).isPresent()) {
+                    return true;
+                }
+            }
+            return false;
+        } else if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
             return true;
         } else if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
             return true;
-        }
-
-        return parameterContext.getParameter().getType() == WireMock.class;
+        } else return parameterContext.getParameter().getType() == WireMock.class;
     }
 
     /**
@@ -110,13 +111,15 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     public Object resolveParameter(
             ParameterContext parameterContext, ExtensionContext extensionContext)
             throws ParameterResolutionException {
-        for (var entry : TENANT_MAP.entrySet()) {
-            Optional<? extends Annotation> annotation = parameterContext.findAnnotation(entry.getValue());
-            if (annotation.isPresent()) {
-                return tokenFactory.createToken(annotation.get());
+
+        if (parameterContext.getParameter().getType() == String.class) {
+            for (var entry : TENANT_LIST) {
+                Optional<? extends Annotation> annotation = parameterContext.findAnnotation(entry);
+                if (annotation.isPresent()) {
+                    return tokenFactory.createToken(annotation.get());
+                }
             }
-        }
-        if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
+        } else if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
             return tokenFactory;
         } else if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
             return tokenFactory.getServer();

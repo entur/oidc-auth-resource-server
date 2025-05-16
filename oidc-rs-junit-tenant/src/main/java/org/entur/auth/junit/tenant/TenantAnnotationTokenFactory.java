@@ -2,7 +2,12 @@ package org.entur.auth.junit.tenant;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import java.lang.annotation.Annotation;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.JwtTokenFactory;
@@ -19,6 +24,7 @@ import org.entur.auth.WireMockAuthenticationServer;
  * <p>Supports the following tenant annotations:
  *
  * <ul>
+ *   <li>{@link org.entur.auth.junit.tenant.TenantToken}
  *   <li>{@link org.entur.auth.junit.tenant.PartnerTenant}
  *   <li>{@link org.entur.auth.junit.tenant.InternalTenant}
  *   <li>{@link org.entur.auth.junit.tenant.TravellerTenant}
@@ -27,9 +33,6 @@ import org.entur.auth.WireMockAuthenticationServer;
  */
 @Slf4j
 public class TenantAnnotationTokenFactory {
-    /** The name used for reserving the port for the mock authentication server. */
-    public static final String MOCKAUTHSERVER_PORT_NAME = "MOCKAUTHSERVER_PORT";
-
     private final Provider provider;
     private final PortReservation portReservation;
     private JwtTokenFactory jwtTokenFactory;
@@ -129,18 +132,43 @@ public class TenantAnnotationTokenFactory {
             final JwtTokenFactory jwtTokenFactory,
             final Provider provider,
             final Annotation tenant) {
-        if (tenant instanceof PartnerTenant) {
+        if (tenant instanceof TenantToken annotation) {
+            checkTenantExists(server, jwtTokenFactory, provider, annotation.tenant());
+
+            Map<String, Object> claims = new HashMap<>();
+            claims.putAll(
+                    Arrays.stream(annotation.stringClaims())
+                            .collect(Collectors.toMap(StringClaim::name, StringClaim::value)));
+
+            claims.putAll(
+                    Arrays.stream(annotation.stringArrayClaims())
+                            .collect(Collectors.toMap(StringArrayClaim::name, StringArrayClaim::value)));
+
+            claims.putAll(
+                    Arrays.stream(annotation.longClaims())
+                            .collect(Collectors.toMap(LongClaim::name, LongClaim::value)));
+
+            return "Bearer "
+                    + jwtTokenFactory
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(annotation.tenant())
+                            .subject(annotation.subject())
+                            .audience(annotation.audience())
+                            .expiresAt(Instant.now().plusNanos(annotation.expiresIn()))
+                            .claims(claims)
+                            .create();
+        } else if (tenant instanceof PartnerTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_PARTNER);
 
-            PartnerTenant annotation = (PartnerTenant) tenant;
             return "Bearer "
                     + jwtTokenFactory
                             .jwtTokenBuilder()
                             .provider(provider)
                             .domain(EnturProvider.TENANT_PARTNER)
                             .subject(annotation.subject())
-                            .audience(annotation.audience())
-                            .expiresInMinutes(annotation.expiresInMinutes())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
                             .claims(
                                     Map.of(
                                             EnturProvider.CLAIM_AZP, annotation.clientId(),
@@ -150,51 +178,48 @@ public class TenantAnnotationTokenFactory {
                                             EnturProvider.CLAIM_PREFERRED_USERNAME, annotation.username(),
                                             EnturProvider.CLAIM_PERMISSIONS, annotation.permissions()))
                             .create();
-        } else if (tenant instanceof InternalTenant) {
+        } else if (tenant instanceof InternalTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_INTERNAL);
 
-            InternalTenant annotation = (InternalTenant) tenant;
             return "Bearer "
                     + jwtTokenFactory
                             .jwtTokenBuilder()
                             .provider(provider)
                             .domain(EnturProvider.TENANT_INTERNAL)
                             .subject(annotation.clientId())
-                            .audience(annotation.audience())
-                            .expiresInMinutes(annotation.expiresInMinutes())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
                             .claims(
                                     Map.of(
                                             EnturProvider.CLAIM_AZP, annotation.clientId(),
                                             EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId()))
                             .create();
-        } else if (tenant instanceof TravellerTenant) {
+        } else if (tenant instanceof TravellerTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_TRAVELLER);
 
-            TravellerTenant annotation = (TravellerTenant) tenant;
             return "Bearer "
                     + jwtTokenFactory
                             .jwtTokenBuilder()
                             .provider(provider)
                             .domain(EnturProvider.TENANT_TRAVELLER)
-                            .audience(annotation.audience())
-                            .expiresInMinutes(annotation.expiresInMinutes())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
                             .claims(
                                     Map.of(
                                             EnturProvider.CLAIM_AZP, annotation.clientId(),
                                             EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
                                             EnturProvider.CLAIM_CUSTOMER_NUMBER, annotation.customerNumber()))
                             .create();
-        } else if (tenant instanceof PersonTenant) {
+        } else if (tenant instanceof PersonTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_PERSON);
 
-            PersonTenant annotation = (PersonTenant) tenant;
             return "Bearer "
                     + jwtTokenFactory
                             .jwtTokenBuilder()
                             .provider(provider)
                             .domain(EnturProvider.TENANT_PERSON)
-                            .audience(annotation.audience())
-                            .expiresInMinutes(annotation.expiresInMinutes())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
                             .claims(
                                     Map.of(
                                             EnturProvider.CLAIM_AZP,

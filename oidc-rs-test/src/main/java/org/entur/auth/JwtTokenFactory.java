@@ -6,7 +6,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
@@ -90,7 +90,7 @@ public class JwtTokenFactory {
      * @param subject the subject (user identifier)
      * @param audience the audience of the token
      * @param claims additional claims to include in the token
-     * @param expiresInMinutes the expiration time in minutes
+     * @param expiresAt the expiration tim
      * @return the generated JWT token as a string
      * @throws IllegalArgumentException if the tenant is unknown for the given provider
      */
@@ -99,10 +99,9 @@ public class JwtTokenFactory {
             @NonNull Provider provider,
             @NonNull String domain,
             String subject,
-            String audience,
+            String[] audience,
             Map<String, Object> claims,
-            int expiresInMinutes) {
-        Date expiresAt = Date.from(ZonedDateTime.now().plusMinutes(expiresInMinutes).toInstant());
+            Instant expiresAt) {
         Map<String, KeyPair> providerMap = keyPairsByTenantByProvider.get(provider.getName());
         if (providerMap == null) {
             throw new IllegalArgumentException(
@@ -118,14 +117,15 @@ public class JwtTokenFactory {
                         .add("typ", "JWT")
                         .and()
                         .issuer(provider.getIssuerUrl(domain))
-                        .expiration(expiresAt);
+                        .expiration(Date.from(expiresAt));
 
         if (subject != null) {
             jwtBuilder.subject(subject);
         }
 
         if (audience != null) {
-            jwtBuilder.audience().add(audience);
+            var audienceBuilder = jwtBuilder.audience();
+            Arrays.stream(audience).forEach(audienceBuilder::add);
         }
 
         if (claims != null) {
@@ -133,9 +133,7 @@ public class JwtTokenFactory {
                     .filter(stringObjectEntry -> stringObjectEntry.getValue() != null)
                     .forEach(
                             stringObjectEntry ->
-                                    jwtBuilder.claim(
-                                            provider.mapClaimName(stringObjectEntry.getKey()),
-                                            stringObjectEntry.getValue()));
+                                    jwtBuilder.claim(stringObjectEntry.getKey(), stringObjectEntry.getValue()));
         }
 
         return jwtBuilder.signWith(keyPair.getPrivate()).compact();

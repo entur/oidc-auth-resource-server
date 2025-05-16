@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import java.time.Instant;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +21,8 @@ public class JwtTokenFactoryTest {
                         .jwtTokenBuilder()
                         .provider(provider)
                         .domain(DOMAIN_TENANT)
-                        .audience("https://api.dev.entur.io")
-                        .expiresInMinutes(5)
+                        .audience(new String[] {"https://api.dev.entur.io"})
+                        .expiresAt(Instant.now().plusSeconds(5 * 60))
                         .claims(
                                 Map.of(
                                         CLAIM_ORGANISATION_ID,

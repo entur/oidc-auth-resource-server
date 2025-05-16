@@ -40,13 +40,13 @@ public class EnturProvider implements Provider {
     public static final String TENANT_PERSON = "person";
 
     /** Claim key for organisation ID. */
-    public static final String CLAIM_ORGANISATION_ID = "organisationID";
+    public static final String CLAIM_ORGANISATION_ID = "https://entur.io/organisationID";
 
     /** Claim key for customer number. */
-    public static final String CLAIM_CUSTOMER_NUMBER = "customerNumber";
+    public static final String CLAIM_CUSTOMER_NUMBER = "https://entur.io/customerNumber";
 
     /** Claim key for social security number. */
-    public static final String CLAIM_SOCIAL_SECURITY_NUMBER = "ssn";
+    public static final String CLAIM_SOCIAL_SECURITY_NUMBER = "https://entur.io/ssn";
 
     /** Claim key for user permissions. */
     public static final String CLAIM_PERMISSIONS = "permissions";
@@ -68,27 +68,5 @@ public class EnturProvider implements Provider {
      */
     public String getIssuerUrl(String tenant) {
         return String.format("https://%s.mock.entur.io", tenant);
-    }
-
-    /**
-     * Maps a given claim name to a standardized claim identifier.
-     *
-     * <p>If the claim name matches one of the predefined standard claim names (e.g., {@code
-     * CLAIM_AZP}, {@code CLAIM_PREFERRED_USERNAME}, {@code CLAIM_EMAIL}, or {@code
-     * CLAIM_EMAIL_VERIFIED}), the original name is returned. Otherwise, the claim name is mapped to a
-     * namespaced identifier using the format "https://entur.io/{name}".
-     *
-     * @param name the original claim name
-     * @return the mapped claim name
-     */
-    public String mapClaimName(String name) {
-        if (CLAIM_AZP.equals(name)
-                || CLAIM_PREFERRED_USERNAME.equals(name)
-                || CLAIM_EMAIL.equals(name)
-                || CLAIM_EMAIL_VERIFIED.equals(name)) {
-            return name;
-        } else {
-            return String.format("https://entur.io/%s", name);
-        }
     }
 }

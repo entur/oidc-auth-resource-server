@@ -53,15 +53,4 @@ public interface Provider {
     default String getCertPath(String tenant) {
         return String.format("/%s/.well-known/jwks.json", tenant);
     }
-
-    /**
-     * Maps a claim name to its corresponding value. This method provides a default implementation
-     * that returns the input name unchanged.
-     *
-     * @param name the claim name to map
-     * @return the mapped claim name
-     */
-    default String mapClaimName(String name) {
-        return name;
-    }
 }

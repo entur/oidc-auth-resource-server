@@ -12,21 +12,38 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ResolveTokenTest {
 
     @Test
+    void testTenantToken(
+            @TenantToken(
+                            subject = "testSubject",
+                            audience = "testAudience",
+                            stringClaims = {@StringClaim(name = "scope", value = "write")})
+                    String token) {
+
+        DecodedJWT decode = JWT.decode(token.substring(7));
+
+        assertThat(decode.getClaim("sub").asString()).isEqualTo("testSubject");
+        assertThat(decode.getClaim("aud").asList(String.class)).containsExactly("testAudience");
+        assertThat(decode.getClaim("scope").asString()).isEqualTo("write");
+    }
+
+    @Test
     void testPartnerTenant(
-            @PartnerTenant(clientId = "abc", username = "testUser") String token,
-            TenantAnnotationTokenFactory factory) {
+            @PartnerTenant(
+                            clientId = "abc",
+                            username = "testUser",
+                            permissions = {"person:read"})
+                    String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
         assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
         assertThat(decode.getClaim("preferred_username").asString()).isEqualTo("testUser");
+        assertThat(decode.getClaim("permissions").asList(String.class)).containsExactly("person:read");
         assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
     }
 
     @Test
-    void testInternalTenant(
-            @InternalTenant(clientId = "abc", organisationId = 123L) String token,
-            TenantAnnotationTokenFactory factory) {
+    void testInternalTenant(@InternalTenant(clientId = "abc", organisationId = 123L) String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
@@ -37,8 +54,7 @@ class ResolveTokenTest {
     @Test
     void testTravellerTenant(
             @TravellerTenant(clientId = "abc", organisationId = 123L, customerNumber = "def")
-                    String token,
-            TenantAnnotationTokenFactory factory) {
+                    String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
@@ -50,8 +66,7 @@ class ResolveTokenTest {
     @Test
     void testPersonTenant(
             @PersonTenant(clientId = "abc", organisationId = 123L, socialSecurityNumber = "11223344556")
-                    String token,
-            TenantAnnotationTokenFactory factory) {
+                    String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
