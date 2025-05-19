@@ -148,6 +148,14 @@ public class TenantAnnotationTokenFactory {
                     Arrays.stream(annotation.longClaims())
                             .collect(Collectors.toMap(LongClaim::name, LongClaim::value)));
 
+            claims.putAll(
+                    Arrays.stream(annotation.longArrayClaims())
+                            .collect(Collectors.toMap(LongArrayClaim::name, LongArrayClaim::value)));
+
+            claims.putAll(
+                    Arrays.stream(annotation.booleanClaims())
+                            .collect(Collectors.toMap(BooleanClaim::name, BooleanClaim::value)));
+
             return "Bearer "
                     + jwtTokenFactory
                             .jwtTokenBuilder()

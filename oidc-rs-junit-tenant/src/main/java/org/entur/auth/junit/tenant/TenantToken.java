@@ -71,9 +71,9 @@ public @interface TenantToken {
     StringClaim[] stringClaims() default {};
 
     /**
-     * The string claims for the token.
+     * The array of string claims for the token.
      *
-     * @return the claims of type string
+     * @return the array claims of type string
      */
     StringArrayClaim[] stringArrayClaims() default {};
 
@@ -83,4 +83,18 @@ public @interface TenantToken {
      * @return the claims of type long
      */
     LongClaim[] longClaims() default {};
+
+    /**
+     * The array of long claims for the token.
+     *
+     * @return the array claims of type string
+     */
+    LongArrayClaim[] longArrayClaims() default {};
+
+    /**
+     * The array of long claims for the token.
+     *
+     * @return the array claims of type boolean
+     */
+    BooleanClaim[] booleanClaims() default {};
 }

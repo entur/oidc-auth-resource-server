@@ -16,7 +16,19 @@ class ResolveTokenTest {
             @TenantToken(
                             subject = "testSubject",
                             audience = "testAudience",
-                            stringClaims = {@StringClaim(name = "scope", value = "write")})
+                            stringClaims = {@StringClaim(name = "scope", value = "write")},
+                            stringArrayClaims = {
+                                @StringArrayClaim(
+                                        name = "roles",
+                                        value = {"a", "b", "c"})
+                            },
+                            longClaims = {@LongClaim(name = "https://entur.io/organisationID", value = 123L)},
+                            longArrayClaims = {
+                                @LongArrayClaim(
+                                        name = "ids",
+                                        value = {1L, 2L, 3L})
+                            },
+                            booleanClaims = {@BooleanClaim(name = "email_verified", value = true)})
                     String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
@@ -24,6 +36,10 @@ class ResolveTokenTest {
         assertThat(decode.getClaim("sub").asString()).isEqualTo("testSubject");
         assertThat(decode.getClaim("aud").asList(String.class)).containsExactly("testAudience");
         assertThat(decode.getClaim("scope").asString()).isEqualTo("write");
+        assertThat(decode.getClaim("roles").asList(String.class)).containsExactly("a", "b", "c");
+        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertThat(decode.getClaim("ids").asList(Long.class)).containsExactly(1L, 2L, 3L);
+        assertThat(decode.getClaim("email_verified").asBoolean()).isEqualTo(true);
     }
 
     @Test
@@ -77,9 +93,7 @@ class ResolveTokenTest {
 
     /** Test that creating an expired token actually works */
     @Test
-    void testExpiredToken(
-            @PartnerTenant(expiresInMinutes = -1) String authorization,
-            TenantAnnotationTokenFactory factory) {
+    void testExpiredToken(@PartnerTenant(expiresInMinutes = -1) String authorization) {
 
         DecodedJWT decode = JWT.decode(authorization.substring(7));
         assertThat(decode.getExpiresAtAsInstant()).isAtMost(Instant.now());
