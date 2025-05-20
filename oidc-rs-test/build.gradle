@@ -23,8 +23,7 @@ dependencies {
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    
-    testImplementation ("com.google.truth:truth:${googleTruthVersion}")
+
     testImplementation("com.auth0:java-jwt:${javaJwtVersion}")
     
 }

@@ -1,10 +1,13 @@
 package org.entur.auth.junit.tenant;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.time.Instant;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -33,13 +36,13 @@ class ResolveTokenTest {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
-        assertThat(decode.getClaim("sub").asString()).isEqualTo("testSubject");
-        assertThat(decode.getClaim("aud").asList(String.class)).containsExactly("testAudience");
-        assertThat(decode.getClaim("scope").asString()).isEqualTo("write");
-        assertThat(decode.getClaim("roles").asList(String.class)).containsExactly("a", "b", "c");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
-        assertThat(decode.getClaim("ids").asList(Long.class)).containsExactly(1L, 2L, 3L);
-        assertThat(decode.getClaim("email_verified").asBoolean()).isEqualTo(true);
+        assertEquals("testSubject", decode.getClaim("sub").asString());
+        assertIterableEquals(List.of("testAudience"), decode.getClaim("aud").asList(String.class));
+        assertEquals("write", decode.getClaim("scope").asString());
+        assertIterableEquals(List.of("a", "b", "c"), decode.getClaim("roles").asList(String.class));
+        assertEquals(123L, decode.getClaim("https://entur.io/organisationID").asLong());
+        assertIterableEquals(List.of(1L, 2L, 3L), decode.getClaim("ids").asList(Long.class));
+        assertEquals(true, decode.getClaim("email_verified").asBoolean());
     }
 
     @Test
@@ -52,43 +55,44 @@ class ResolveTokenTest {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
-        assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
-        assertThat(decode.getClaim("preferred_username").asString()).isEqualTo("testUser");
-        assertThat(decode.getClaim("permissions").asList(String.class)).containsExactly("person:read");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertEquals("abc", decode.getClaim("azp").asString());
+        assertEquals("testUser", decode.getClaim("preferred_username").asString());
+        assertIterableEquals(
+                List.of("person:read"), decode.getClaim("permissions").asList(String.class));
+        assertEquals(123L, decode.getClaim("https://entur.io/organisationID").asLong());
     }
 
     @Test
-    void testInternalTenant(@InternalTenant(clientId = "abc", organisationId = 123L) String token) {
+    void testInternalTenant(@InternalTenant(clientId = "abc", organisationId = 1234L) String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
-        assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertEquals("abc", decode.getClaim("azp").asString());
+        assertEquals(1234L, decode.getClaim("https://entur.io/organisationID").asLong());
     }
 
     @Test
     void testTravellerTenant(
-            @TravellerTenant(clientId = "abc", organisationId = 123L, customerNumber = "def")
+            @TravellerTenant(clientId = "abc", organisationId = 1234L, customerNumber = "def")
                     String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
-        assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
-        assertThat(decode.getClaim("https://entur.io/customerNumber").asString()).isEqualTo("def");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertEquals("abc", decode.getClaim("azp").asString());
+        assertEquals("def", decode.getClaim("https://entur.io/customerNumber").asString());
+        assertEquals(1234L, decode.getClaim("https://entur.io/organisationID").asLong());
     }
 
     @Test
     void testPersonTenant(
-            @PersonTenant(clientId = "abc", organisationId = 123L, socialSecurityNumber = "11223344556")
+            @PersonTenant(clientId = "abc", organisationId = 1234L, socialSecurityNumber = "11223344556")
                     String token) {
 
         DecodedJWT decode = JWT.decode(token.substring(7));
 
-        assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
-        assertThat(decode.getClaim("https://entur.io/ssn").asString()).isEqualTo("11223344556");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertEquals("abc", decode.getClaim("azp").asString());
+        assertEquals("11223344556", decode.getClaim("https://entur.io/ssn").asString());
+        assertEquals(1234L, decode.getClaim("https://entur.io/organisationID").asLong());
     }
 
     /** Test that creating an expired token actually works */
@@ -96,6 +100,6 @@ class ResolveTokenTest {
     void testExpiredToken(@PartnerTenant(expiresInMinutes = -1) String authorization) {
 
         DecodedJWT decode = JWT.decode(authorization.substring(7));
-        assertThat(decode.getExpiresAtAsInstant()).isAtMost(Instant.now());
+        assertTrue(decode.getExpiresAtAsInstant().isBefore(Instant.now()), "expiresAt is after now");
     }
 }

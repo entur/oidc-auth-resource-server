@@ -3,7 +3,7 @@ package org.entur.auth.junit.tenant;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ResolveServerTest {
     @Test
     void testAddMyOwnMocking(
-            @TravellerTenant(clientId = "abc", organisationId = 123L, customerNumber = "def")
+            @TravellerTenant(clientId = "abc", organisationId = 1234L, customerNumber = "def")
                     String authorization,
             WireMockAuthenticationServer wireMockAuthenticationServer,
             WireMock wireMock)
@@ -37,13 +37,13 @@ class ResolveServerTest {
 
         DecodedJWT decode = JWT.decode(authorization.substring(7));
 
-        assertThat(decode.getClaim("azp").asString()).isEqualTo("abc");
-        assertThat(decode.getClaim("https://entur.io/customerNumber").asString()).isEqualTo("def");
-        assertThat(decode.getClaim("https://entur.io/organisationID").asLong()).isEqualTo(123L);
+        assertEquals("abc", decode.getClaim("azp").asString());
+        assertEquals("def", decode.getClaim("https://entur.io/customerNumber").asString());
+        assertEquals(1234L, decode.getClaim("https://entur.io/organisationID").asLong());
 
         URI uri =
                 new URI(
                         "http", null, "localhost", wireMockAuthenticationServer.getPort(), "/test", null, null);
-        assertThat(IOUtils.toString(uri.toURL().openStream(), StandardCharsets.UTF_8)).isEqualTo(body);
+        assertEquals(body, IOUtils.toString(uri.toURL().openStream(), StandardCharsets.UTF_8));
     }
 }

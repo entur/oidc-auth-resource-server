@@ -10,10 +10,6 @@ java {
 }
 
 dependencies {
-    constraints {
-        implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
-    }
-
     // Spring
     api project(':oidc-rs-spring-boot-webflux-config')
     api ("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
@@ -26,6 +22,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     // Testing
+    testImplementation("ch.qos.logback:logback-classic:${logback14xVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }

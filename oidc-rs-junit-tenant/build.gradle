@@ -9,22 +9,9 @@ dependencies {
     // Wiremock
     api("org.wiremock:wiremock-standalone:${wiremockVersion}")
 
-    api("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}") {
-        version {
-            require "${junitJupiterVersion}"
-        }
-    }
-    api("org.junit.platform:junit-platform-commons:${junitPlatformVersion}") {
-        version {
-            require "${junitPlatformVersion}"
-        }
-    }
-
-    api("javax.servlet:javax.servlet-api:${servletApiVersion}") {
-        version {
-            require "${servletApiVersion}"
-        }
-    }
+    // JUnit
+    api("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    api("org.junit.platform:junit-platform-commons:${junitPlatformVersion}")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")

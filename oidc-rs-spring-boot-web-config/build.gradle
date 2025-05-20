@@ -10,10 +10,6 @@ java {
 }
 
 dependencies {
-    constraints {
-        implementation("ch.qos.logback:logback-classic:${logback14xVersion}")
-    }
-
     // Spring
     api project(':oidc-rs-spring-boot-web')
     api project(':oidc-rs-spring-boot-common')
@@ -25,6 +21,7 @@ dependencies {
 
     // Testing
     testImplementation project(':oidc-rs-junit-tenant')
+    testImplementation("ch.qos.logback:logback-classic:${logback14xVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")

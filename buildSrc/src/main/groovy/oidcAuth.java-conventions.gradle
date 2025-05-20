@@ -24,15 +24,6 @@ dependencies {
         testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
     }
-
-    if(project.hasProperty('mockitoVersion')) {
-        testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    }
-
-    if(project.hasProperty('googleTruthVersion')) {
-        testImplementation("com.google.truth:truth:${googleTruthVersion}")
-        testImplementation("com.google.truth.extensions:truth-java8-extension:${googleTruthVersion}")
-    }
 }
 
 // Enable deprecation messages when compiling Java code

@@ -1,6 +1,7 @@
 package org.entur.auth;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -36,11 +37,10 @@ public class JwtTokenFactoryTest {
         DecodedJWT decode = JWT.decode(token);
 
         // check other claims
-        assertThat(decode.getClaim(CLAIM_ORGANISATION_ID).asLong()).isEqualTo(12345678L);
-        assertThat(decode.getClaim(Provider.CLAIM_AZP).asString()).isEqualTo("ABC");
-        assertThat(decode.getClaim(Provider.CLAIM_PREFERRED_USERNAME).asString())
-                .isEqualTo("myUsername");
-        assertThat(decode.getAudience().get(0)).isEqualTo("https://api.dev.entur.io");
-        assertThat(decode.getIssuer()).contains(DOMAIN_TENANT);
+        assertEquals(12345678L, decode.getClaim(CLAIM_ORGANISATION_ID).asLong());
+        assertEquals("ABC", decode.getClaim(Provider.CLAIM_AZP).asString());
+        assertEquals("myUsername", decode.getClaim(Provider.CLAIM_PREFERRED_USERNAME).asString());
+        assertEquals("https://api.dev.entur.io", decode.getAudience().get(0));
+        assertTrue(decode.getIssuer().contains(DOMAIN_TENANT));
     }
 }

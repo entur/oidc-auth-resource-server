@@ -1,6 +1,6 @@
 package org.entur.auth.spring.test.authorization;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
@@ -39,6 +39,6 @@ class ReactiveAuthorizeRequestsTemplateTest {
 
         ResponseEntity<String> response =
                 restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
