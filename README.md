@@ -81,6 +81,17 @@ entur:
         certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
 ```
 
+### Using issuers in external file
+Additional to *predefined tenants* can issuers be defined in external file:
+
+```yaml
+entur:
+  auth:
+    external:
+      tenants: partner, internal
+      resource: ${providers_file:file:./src/test/kubernetes/dev/providers.properties}
+```
+
 ### Configure authorization filter
 By default, will the authorization filter enforces the use of fully authenticated.
 

@@ -8,4 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class EnturAuthTestProperties {
     private boolean loadEnvironments = false;
     private boolean loadIssuers = false;
+    private boolean loadExternal = false;
 }

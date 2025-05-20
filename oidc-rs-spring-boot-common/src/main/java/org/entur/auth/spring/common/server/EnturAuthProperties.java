@@ -20,5 +20,6 @@ public class EnturAuthProperties {
 
     private List<IssuerProperties> issuers = new ArrayList<>();
     private TenantsProperties tenants = new TenantsProperties();
+    private ExternalAuthProperties external = new ExternalAuthProperties();
     private List<ApiProperties> apis = new ArrayList<>();
 }

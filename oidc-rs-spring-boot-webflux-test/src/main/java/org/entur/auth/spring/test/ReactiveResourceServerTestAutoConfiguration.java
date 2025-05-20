@@ -33,6 +33,10 @@ public class ReactiveResourceServerTestAutoConfiguration {
             enturAuthProperties.setIssuers(Collections.emptyList());
         }
 
+        if (!reactiveEnturAuthTestProperties.isLoadExternal()) {
+            enturAuthProperties.getExternal().setIssuers(Collections.emptyList());
+        }
+
         if (enturAuthProperties.getLazyLoad() == null) {
             log.info("Turn on lazy load of JWKS to support use of TenantJsonWebToken.");
             enturAuthProperties.setLazyLoad(true);

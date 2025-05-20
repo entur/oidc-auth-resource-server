@@ -1,0 +1,10 @@
+entur:
+  auth:
+    lazy-load: true
+    external:
+      tenants: partner
+      resource: ${providers_file:file:./src/test/kubernetes/mock/providers.properties}
+
+    tenants:
+      environment: mock
+      include: []
