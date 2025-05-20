@@ -1,6 +1,6 @@
 plugins {
     id 'com.github.ben-manes.versions' version '0.52.0' apply false
-    id "com.github.spotbugs" version "6.1.7" apply false
+    id "com.github.spotbugs" version "6.1.11" apply false
     id 'com.diffplug.spotless' version "7.0.3" apply false
 }
 
@@ -12,14 +12,14 @@ subprojects {
         jaxbVersion = '4.0.2'
         glassfishJaxbVersion = '4.0.5'
         jacksonDatabindVersion = '2.14.3'
-        apacheCommonsVersion = '2.18.0'
+        apacheCommonsVersion = '2.19.0'
         slf4jVersion = '2.0.17'
 
-        junitPlatformVersion = '1.11.4'
-        junitJupiterVersion  = '5.11.4'
-        wiremockVersion = '3.12.0'
-        logback14xVersion = '1.5.17'
+        junitPlatformVersion = '1.12.2'
+        junitJupiterVersion  = '5.12.2'
+        wiremockVersion = '3.13.0'
+        logback14xVersion = '1.5.18'
 
-        lombokVersion = '1.18.36'
+        lombokVersion = '1.18.38'
     }
 }
