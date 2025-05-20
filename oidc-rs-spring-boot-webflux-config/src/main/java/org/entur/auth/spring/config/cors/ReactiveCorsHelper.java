@@ -26,7 +26,6 @@ public class ReactiveCorsHelper {
                                             corsProperties.getHosts().stream(),
                                             Stream.of(
                                                     "https://petstore.swagger.io",
-                                                    "https://test-entur.devportal.apigee.io",
                                                     "https://developer.entur.org"))
                                     .toList()));
         }

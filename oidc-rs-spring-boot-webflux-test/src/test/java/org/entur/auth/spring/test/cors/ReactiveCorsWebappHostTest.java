@@ -24,7 +24,6 @@ class ReactiveCorsWebappHostTest {
     private final List<String> hosts =
             List.of(
                     "https://petstore.swagger.io",
-                    "https://test-entur.devportal.apigee.io",
                     "https://developer.entur.org");
 
     @LocalServerPort private int randomServerPort;
