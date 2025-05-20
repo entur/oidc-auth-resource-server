@@ -25,10 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 class CorsWebappHostTest {
     private final List<HttpMethod> methods =
             List.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
-    private final List<String> hosts =
-            List.of(
-                    "https://petstore.swagger.io",
-                    "https://developer.entur.org");
+    private final List<String> hosts = List.of("https://petstore.swagger.io");
 
     @Autowired private MockMvc mockMvc;
 

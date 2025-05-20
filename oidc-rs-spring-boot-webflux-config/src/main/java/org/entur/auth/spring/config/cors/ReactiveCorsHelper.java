@@ -23,10 +23,7 @@ public class ReactiveCorsHelper {
             corsSpec.configurationSource(
                     getCorsConfiguration(
                             Stream.concat(
-                                            corsProperties.getHosts().stream(),
-                                            Stream.of(
-                                                    "https://petstore.swagger.io",
-                                                    "https://developer.entur.org"))
+                                            corsProperties.getHosts().stream(), Stream.of("https://petstore.swagger.io"))
                                     .toList()));
         }
     }
