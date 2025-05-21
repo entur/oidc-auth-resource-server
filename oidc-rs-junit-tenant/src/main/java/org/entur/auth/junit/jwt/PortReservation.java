@@ -97,6 +97,17 @@ public class PortReservation {
     private boolean reserve(int candidatePort, boolean retry) {
         // Retry on failure, 10 times.
         for (int i = 0; i < 10; i++) {
+
+            if (i > 0) {
+                log.debug("Waiting 1 second before try reserve port {}.", candidatePort);
+                try {
+                    wait(1000); // Wait 1 second
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+
             try {
                 ServerSocket result = capturePort(candidatePort);
                 if (result != null) {
@@ -107,13 +118,6 @@ public class PortReservation {
                 if (!retry) {
                     return false;
                 }
-            }
-
-            try {
-                wait(1000); // Wait 1 second
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
             }
         }
         return false;
