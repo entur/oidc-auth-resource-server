@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.jwt;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;

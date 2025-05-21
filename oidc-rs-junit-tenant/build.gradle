@@ -4,14 +4,19 @@ plugins {
 }
 
 dependencies {
-    api project(":oidc-rs-test")
-
     // Wiremock
     api("org.wiremock:wiremock-standalone:${wiremockVersion}")
 
+    // JWT
+    api ("io.jsonwebtoken:jjwt-api:${jjwtVersion}")
+    api ("io.jsonwebtoken:jjwt-impl:${jjwtVersion}")
+    api ("io.jsonwebtoken:jjwt-jackson:${jjwtVersion}")
+
     // JUnit
     api("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-    api("org.junit.platform:junit-platform-commons:${junitPlatformVersion}")
+
+    // Logging
+    api("org.slf4j:slf4j-api:${slf4jVersion}")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")

@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.jwt;
 
 /** Exception thrown when a requested cryptographic algorithm does not exist. */
 public class AlgorithmDoNotExistsException extends RuntimeException {

@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.entur.auth.JwtTokenFactory;
-import org.entur.auth.PortReservation;
-import org.entur.auth.Provider;
-import org.entur.auth.WireMockAuthenticationServer;
+import org.entur.auth.junit.jwt.EnturProvider;
+import org.entur.auth.junit.jwt.JwtTokenFactory;
+import org.entur.auth.junit.jwt.PortReservation;
+import org.entur.auth.junit.jwt.Provider;
 
 /**
  * Factory for generating JWT tokens based on tenant annotations used in tests.
@@ -41,9 +41,9 @@ public class TenantAnnotationTokenFactory {
     /**
      * Constructs a new {@code TenantAnnotationTokenFactory}.
      *
-     * @param provider the {@link org.entur.auth.Provider} to use when creating tokens
-     * @param portReservation the {@link org.entur.auth.PortReservation} port to use when creating
-     *     mock server
+     * @param provider the {@link org.entur.auth.junit.jwt.Provider} to use when creating tokens
+     * @param portReservation the {@link org.entur.auth.junit.jwt.PortReservation} port to use when
+     *     creating mock server
      */
     public TenantAnnotationTokenFactory(
             @NonNull final Provider provider, @NonNull final PortReservation portReservation) {
@@ -117,8 +117,9 @@ public class TenantAnnotationTokenFactory {
     /**
      * Creates a bearer JWT token from the given tenant annotation.
      *
-     * @param jwtTokenFactory the {@link org.entur.auth.JwtTokenFactory} to build the token with
-     * @param provider the {@link org.entur.auth.Provider} to use when creating tokens
+     * @param jwtTokenFactory the {@link org.entur.auth.junit.jwt.JwtTokenFactory} to build the token
+     *     with
+     * @param provider the {@link org.entur.auth.junit.jwt.Provider} to use when creating tokens
      * @param tenant the tenant annotation instance, must be one of the supported tenant types: {@link
      *     org.entur.auth.junit.tenant.PartnerTenant}, {@link
      *     org.entur.auth.junit.tenant.InternalTenant}, {@link

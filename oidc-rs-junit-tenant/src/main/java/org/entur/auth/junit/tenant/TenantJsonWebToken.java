@@ -5,9 +5,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.entur.auth.PortReservation;
-import org.entur.auth.Provider;
-import org.entur.auth.WireMockAuthenticationServer;
+import org.entur.auth.junit.jwt.EnturProvider;
+import org.entur.auth.junit.jwt.PortReservation;
+import org.entur.auth.junit.jwt.Provider;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * com.github.tomakehurst.wiremock.WireMockServer}.
  *
  * <p>The supported tenant types are defined by the {@code SUPPORTED_TENANTS} array and correspond
- * to constants provided by the {@link org.entur.auth.junit.tenant.EnturProvider}.
+ * to constants provided by the {@link org.entur.auth.junit.jwt.EnturProvider}.
  */
 @Slf4j
 public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback {

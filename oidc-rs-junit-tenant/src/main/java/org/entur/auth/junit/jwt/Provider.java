@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.jwt;
 
 /**
  * Represents an authentication provider that supports multiple tenants and provides utility methods

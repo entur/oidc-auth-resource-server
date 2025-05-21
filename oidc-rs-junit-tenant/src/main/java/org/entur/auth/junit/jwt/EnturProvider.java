@@ -1,6 +1,4 @@
-package org.entur.auth.junit.tenant;
-
-import org.entur.auth.Provider;
+package org.entur.auth.junit.jwt;
 
 /**
  * Implementation of the {@link Provider} interface for Entur authentication.

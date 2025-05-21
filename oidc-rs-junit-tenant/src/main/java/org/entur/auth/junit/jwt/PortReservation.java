@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.jwt;
 
 import java.io.IOException;
 import java.net.InetAddress;

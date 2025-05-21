@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.tenant;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;

@@ -1,4 +1,4 @@
-package org.entur.auth;
+package org.entur.auth.junit.tenant.jwt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -7,6 +7,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.time.Instant;
 import java.util.Map;
+import org.entur.auth.junit.jwt.JwtTokenFactory;
+import org.entur.auth.junit.jwt.Provider;
 import org.junit.jupiter.api.Test;
 
 public class JwtTokenFactoryTest {
