@@ -65,6 +65,6 @@ class WireMockTestAnnotationTest {
 
     @AfterAll
     static void aferAllTests(TenantAnnotationTokenFactory annotationTokenFactory) {
-        annotationTokenFactory.shutdown();
+        annotationTokenFactory.close();
     }
 }

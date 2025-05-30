@@ -10,4 +10,4 @@ entur:
             - /unprotected
     tenants:
       environment: dev
-      include: partner
+      include: []
