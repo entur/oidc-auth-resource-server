@@ -32,7 +32,7 @@ import org.entur.auth.junit.jwt.Provider;
  * </ul>
  */
 @Slf4j
-public class TenantAnnotationTokenFactory {
+public class TenantAnnotationTokenFactory implements AutoCloseable {
     private final Provider provider;
     private final PortReservation portReservation;
     private JwtTokenFactory jwtTokenFactory;
@@ -61,9 +61,7 @@ public class TenantAnnotationTokenFactory {
             return;
         }
 
-        if (this.server != null) {
-            this.server.close();
-        }
+        close();
 
         log.info("Setup mock server on port {}", portReservation.getPort());
         this.jwtTokenFactory = new JwtTokenFactory(provider);
@@ -75,19 +73,23 @@ public class TenantAnnotationTokenFactory {
             return;
         }
 
-        if (this.server != null) {
-            this.server.close();
-        }
+        close();
 
-        log.info("Setup mock server on port {}", portReservation.getPort());
+        log.info("Setup mock server on port {}", port);
         this.jwtTokenFactory = new JwtTokenFactory(provider);
         this.server = new WireMockAuthenticationServer(wireMock, port);
     }
 
-    public void shutdown() {
+    public void close() {
+        if (this.server == null) {
+            return;
+        }
+
         this.server.close();
+        if (this.server.getPort() == this.portReservation.getPort()) {
+            this.portReservation.start();
+        }
         this.server = null;
-        this.portReservation.start();
     }
 
     /**
