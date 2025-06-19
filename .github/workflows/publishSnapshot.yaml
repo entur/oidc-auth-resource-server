@@ -7,7 +7,5 @@ jobs:
     name: Publish Snapshot to Maven Central
     uses: entur/gha-maven-central/.github/workflows/gradle-publish.yml@v1
     with:
-      next_version: ''
-      push_to_repo: false
       snapshot: true
     secrets: inherit
