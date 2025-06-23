@@ -20,7 +20,7 @@ public class PortReservation {
     private final int portRangeEnd;
 
     private final String propertyName;
-    private int port = -1;
+    private volatile int port = -1;
     private ServerSocket serverSocket;
 
     public PortReservation(String portNames) {
