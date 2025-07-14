@@ -1,13 +1,13 @@
 plugins {
     id 'com.github.ben-manes.versions' version '0.52.0' apply false
-    id "com.github.spotbugs" version "6.2.0" apply false
-    id 'com.diffplug.spotless' version "7.0.4" apply false
-    id 'org.jreleaser' version "1.18.0" apply false
+    id "com.github.spotbugs" version "6.2.2" apply false
+    id 'com.diffplug.spotless' version "7.1.0" apply false
+    id 'org.jreleaser' version "1.19.0" apply false
 }
 
 subprojects {
     ext {
-        springBoot3Version = '3.5.0'
+        springBoot3Version = '3.5.3'
         javaJwtVersion = '4.5.0'
         jjwtVersion = '0.12.6'
         jacksonDatabindVersion = '2.14.3'
@@ -15,7 +15,7 @@ subprojects {
         slf4jVersion = '2.0.17'
 
         junitPlatformVersion = '1.12.2'
-        junitJupiterVersion  = '5.13.1'
+        junitJupiterVersion  = '5.13.3'
         wiremockVersion = '3.13.1'
         logback14xVersion = '1.5.18'
 
