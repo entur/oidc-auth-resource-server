@@ -254,6 +254,9 @@ class AuthorizeTest {
 }
 ```
 
+> [!TIP]
+> When configure test clas with: ```@TestInstance(TestInstance.Lifecycle.PER_CLASS)``` may it be necessary to use ```@DynamicPropertySource``` and call ```TenantJsonWebToken.setupTokenFactory()```.
+
 ## Customising the SecurityFilterChain
 If additional customising of SecurityFilterChain is needed, it can be provided by implementing own Spring Bean's.
 

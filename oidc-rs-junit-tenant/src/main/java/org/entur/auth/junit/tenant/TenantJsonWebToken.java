@@ -130,12 +130,16 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
         throw new CanNotResolveParameterException();
     }
 
-    private static void setupTokenFactory() {
+    public static void setupTokenFactory() {
         // this code should run before the spring context starts, but in case the class is not loaded,
         // the spring context will run first.
         // In which case the MOCKAUTHSERVER_PORT port must be a free port.
         if (portReservation == null) {
             portReservation = new PortReservation(MOCKAUTHSERVER_PORT_NAME);
+        }
+
+        // Initiate portReservation
+        if (portReservation.getPort() < 0) {
             portReservation.start();
         }
 
