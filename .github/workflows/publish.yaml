@@ -14,7 +14,7 @@ on:
 
 jobs:
   publish:
-    name: Publish Snapshot to Maven Central
+    name: Publish Release to Maven Central
     uses: entur/gha-maven-central/.github/workflows/gradle-publish.yml@v1
     with:
       next_version: ${{ inputs.next_version }}
