@@ -18,4 +18,5 @@ jobs:
     uses: entur/gha-maven-central/.github/workflows/gradle-publish.yml@v1
     with:
       next_version: ${{ inputs.next_version }}
+      version_file_name: "gradle.properties"
     secrets: inherit
