@@ -253,6 +253,9 @@ class AuthorizeTest {
 ```
 
 > [!TIP]
+> When configure test clas with: ```@TestInstance(TestInstance.Lifecycle.PER_CLASS)``` may it be necessary to use ```@DynamicPropertySource``` and call ```TenantJsonWebToken.setupTokenFactory()```.
+
+> [!TIP]
 > When tests fails with **"Couldn't retrieve JWK set from URL: Read timed out"**, can it help to explicit configure ```entur.auth.lazy-load: true``` for your tests.
 
 ## Customising the SecurityFilterChain
