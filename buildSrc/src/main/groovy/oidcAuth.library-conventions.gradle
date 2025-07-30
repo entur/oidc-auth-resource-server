@@ -93,4 +93,10 @@ jreleaser {
             }
         }
     }
+    release {
+        github {
+            overwrite = true
+            update = true
+        }
+    }
 }
