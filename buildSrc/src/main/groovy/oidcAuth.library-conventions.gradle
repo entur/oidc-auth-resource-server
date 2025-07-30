@@ -96,7 +96,6 @@ jreleaser {
     release {
         github {
             overwrite = true
-            enabled = rootProject == project
         }
     }
 }
