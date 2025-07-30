@@ -10,13 +10,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class EnturAuthProperties {
     private boolean enabled = true;
     private Boolean lazyLoad;
-    private boolean retryOnFailure = false;
+    private boolean retryOnFailure = true;
     private int connectTimeout = 5;
     private int readTimeout = 5;
     private int jwksThrottleWait = 30;
     private int refreshAheadTime = 30;
     private int cacheRefreshTimeout = 15;
     private int cacheLifespan = 300;
+    private int outageTolerant = 300;
 
     private List<IssuerProperties> issuers = new ArrayList<>();
     private TenantsProperties tenants = new TenantsProperties();

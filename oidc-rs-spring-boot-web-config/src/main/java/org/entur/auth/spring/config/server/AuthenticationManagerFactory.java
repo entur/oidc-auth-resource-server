@@ -67,6 +67,10 @@ public class AuthenticationManagerFactory {
                 provider.getRetryOnFailure() != null
                         ? provider.getRetryOnFailure()
                         : enturAuthProperties.isRetryOnFailure();
+        long outageTolerant =
+                provider.getOutageTolerant() != null
+                        ? provider.getOutageTolerant()
+                        : enturAuthProperties.getOutageTolerant();
 
         try {
             final JWKSourceBuilder<SecurityContext> jwkSourceBuilder;
@@ -80,16 +84,18 @@ public class AuthenticationManagerFactory {
                                 .cache(Long.MAX_VALUE, cacheRefreshTimeout * 1000)
                                 .refreshAheadCache(false)
                                 .rateLimited(jwksThrottleWait * 1000)
-                                .retrying(retryOnFailure)
-                                .outageTolerant(false);
+                                .retrying(retryOnFailure);
             } else {
                 jwkSourceBuilder =
                         JWKSourceBuilder.create(new URL(provider.getCertificateUrl()), resourceRetriever)
                                 .cache(cacheLifespan * 1000, cacheRefreshTimeout * 1000)
                                 .refreshAheadCache(refreshAheadTime * 1000, true)
                                 .rateLimited(jwksThrottleWait * 1000)
-                                .retrying(retryOnFailure)
-                                .outageTolerantForever();
+                                .retrying(retryOnFailure);
+            }
+
+            if (outageTolerant > 0) {
+                jwkSourceBuilder.outageTolerant(outageTolerant * 1000);
             }
 
             if (healthReportListener != null) {
