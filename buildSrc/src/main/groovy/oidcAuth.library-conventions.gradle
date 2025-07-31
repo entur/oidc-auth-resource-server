@@ -95,7 +95,11 @@ jreleaser {
     }
     release {
         github {
+            enabled = true
             overwrite = true
+            update {
+                enabled = true
+            }
         }
     }
 }
