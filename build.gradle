@@ -55,7 +55,6 @@ jreleaser {
     release {
         github {
             enabled = true
-            enabled = rootProject == project
         }
     }
 }
