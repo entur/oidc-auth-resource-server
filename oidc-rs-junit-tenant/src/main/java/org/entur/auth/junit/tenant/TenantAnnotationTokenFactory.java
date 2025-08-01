@@ -16,12 +16,18 @@ import org.entur.auth.junit.jwt.PortReservation;
 import org.entur.auth.junit.jwt.Provider;
 
 /**
- * Factory for generating JWT tokens based on tenant annotations used in tests.
+ * Utility for creating bearer JWT tokens in JUnit tests based on tenant-specific annotations.
  *
- * <p>This utility is intended to work with JUnit tests where annotations are used to define the
- * desired tenant type and properties for the test context.
+ * <p>When a test method or class is annotated with one of the supported tenant annotations, this
+ * factory will provision a local WireMock-backed authentication server, register the corresponding
+ * tenant realm, and generate a signed JWT with claims derived from the annotation attributes.
  *
- * <p>Supports the following tenant annotations:
+ * <h2>Thread Safety</h2>
+ *
+ * <p>Instances are thread-safe: concurrent calls to {@link #createToken(Annotation)} will
+ * synchronize on the underlying provider to ensure only one mock server lifecycle at a time.
+ *
+ * <h2>Supported Tenant Annotations</h2>
  *
  * <ul>
  *   <li>{@link org.entur.auth.junit.tenant.TenantToken}
@@ -30,6 +36,9 @@ import org.entur.auth.junit.jwt.Provider;
  *   <li>{@link org.entur.auth.junit.tenant.TravellerTenant}
  *   <li>{@link org.entur.auth.junit.tenant.PersonTenant}
  * </ul>
+ *
+ * <p>For each annotation, corresponding default claims (e.g. clientId, organisationId, permissions)
+ * are mapped into the token payload automatically.
  */
 @Slf4j
 public class TenantAnnotationTokenFactory implements AutoCloseable {
@@ -39,11 +48,11 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
     private WireMockAuthenticationServer server;
 
     /**
-     * Constructs a new {@code TenantAnnotationTokenFactory}.
+     * Create a new factory that leverages the given provider and port reservation for setting up a
+     * local mock OpenID Connect server.
      *
-     * @param provider the {@link org.entur.auth.junit.jwt.Provider} to use when creating tokens
-     * @param portReservation the {@link org.entur.auth.junit.jwt.PortReservation} port to use when
-     *     creating mock server
+     * @param provider the JWT provider used to build and sign tokens
+     * @param portReservation manager for reserving and releasing a TCP port for WireMock
      */
     public TenantAnnotationTokenFactory(
             @NonNull final Provider provider, @NonNull final PortReservation portReservation) {
@@ -51,64 +60,96 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
         this.portReservation = portReservation;
     }
 
+    /**
+     * Get the active WireMock authentication server, starting it if necessary.
+     *
+     * @return the running {@link WireMockAuthenticationServer}
+     */
     public WireMockAuthenticationServer getServer() {
         checkServer();
         return server;
     }
 
+    /**
+     * Assign an existing WireMock server instance to use for token issuance.
+     *
+     * <p>This will close any previously opened server bound to the reserved port, and reinitialize
+     * the JWT token builder.
+     *
+     * @param server a preconfigured {@link WireMockAuthenticationServer}
+     */
     public void setServer(@NonNull WireMockAuthenticationServer server) {
-        if (this.server != null && this.server == server) {
-            return;
+        synchronized (provider) {
+            if (this.server != null && this.server == server) {
+                return;
+            }
+
+            close();
+
+            log.info("Setup mock server on port {}", portReservation.getPort());
+            this.jwtTokenFactory = new JwtTokenFactory(provider);
+            this.server = server;
         }
-
-        close();
-
-        log.info("Setup mock server on port {}", portReservation.getPort());
-        this.jwtTokenFactory = new JwtTokenFactory(provider);
-        this.server = server;
-    }
-
-    public void setServer(@NonNull WireMock wireMock, int port) {
-        if (this.server != null && this.server.getMockServer() == wireMock) {
-            return;
-        }
-
-        close();
-
-        log.info("Setup mock server on port {}", port);
-        this.jwtTokenFactory = new JwtTokenFactory(provider);
-        this.server = new WireMockAuthenticationServer(wireMock, port);
-    }
-
-    public void close() {
-        if (this.server == null) {
-            return;
-        }
-
-        this.server.close();
-        if (this.server.getPort() == this.portReservation.getPort()) {
-            this.portReservation.start();
-        }
-        this.server = null;
     }
 
     /**
-     * Creates a bearer JWT token from the given tenant annotation.
+     * Convenience overload: configure a WireMock instance and port directly.
      *
-     * @param tenant the tenant annotation instance, must be one of the supported tenant types: {@link
-     *     org.entur.auth.junit.tenant.PartnerTenant}, {@link
-     *     org.entur.auth.junit.tenant.InternalTenant}, {@link
-     *     org.entur.auth.junit.tenant.TravellerTenant}, or {@link
-     *     org.entur.auth.junit.tenant.PersonTenant}
-     * @return a bearer token string (with prefix {@code "Bearer "})
-     * @throws IllegalArgumentException if the annotation is of an unknown tenant type
+     * @param wireMock raw WireMock client instance
+     * @param port TCP port where WireMock should listen
      */
-    public String createToken(final Annotation tenant) {
-        checkServer();
+    public void setServer(@NonNull WireMock wireMock, int port) {
+        synchronized (provider) {
+            if (this.server != null && this.server.getMockServer() == wireMock) {
+                return;
+            }
 
-        return createToken(server, jwtTokenFactory, provider, tenant);
+            close();
+
+            log.info("Setup mock server on port {}", port);
+            this.jwtTokenFactory = new JwtTokenFactory(provider);
+            this.server = new WireMockAuthenticationServer(wireMock, port);
+        }
     }
 
+    /**
+     * Shut down the current mock server (if any) and release the reserved port.
+     *
+     * <p>Subsequent calls to {@link #getServer()} or {@link #createToken(Annotation)} will start a
+     * fresh server.
+     */
+    @Override
+    public void close() {
+        synchronized (provider) {
+            if (this.server == null) {
+                return;
+            }
+
+            this.server.close();
+            if (this.server.getPort() == this.portReservation.getPort()) {
+                this.portReservation.start();
+            }
+            this.server = null;
+        }
+    }
+
+    /**
+     * Generate a Bearer JWT token for the given tenant annotation.
+     *
+     * <p>If no server is active, one will be started automatically.
+     *
+     * @param tenant an annotation instance indicating which tenant realm and claims to use
+     * @return the complete Authorization header value (including "Bearer ")
+     * @throws IllegalArgumentException if the annotation type is not one of the supported tenants
+     */
+    public String createToken(final Annotation tenant) {
+        synchronized (provider) {
+            checkServer();
+            return createToken(server, jwtTokenFactory, provider, tenant);
+        }
+    }
+
+    /** Ensure the WireMock server is running, reserving the port if needed. */
     private void checkServer() {
         if (this.server == null) {
             portReservation.stop();
@@ -117,18 +158,14 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
     }
 
     /**
-     * Creates a bearer JWT token from the given tenant annotation.
+     * Internal dispatch logic for creating a JWT based on specific tenant annotation types.
      *
-     * @param jwtTokenFactory the {@link org.entur.auth.junit.jwt.JwtTokenFactory} to build the token
-     *     with
-     * @param provider the {@link org.entur.auth.junit.jwt.Provider} to use when creating tokens
-     * @param tenant the tenant annotation instance, must be one of the supported tenant types: {@link
-     *     org.entur.auth.junit.tenant.PartnerTenant}, {@link
-     *     org.entur.auth.junit.tenant.InternalTenant}, {@link
-     *     org.entur.auth.junit.tenant.TravellerTenant}, or {@link
-     *     org.entur.auth.junit.tenant.PersonTenant}
-     * @return a bearer token string (with prefix {@code "Bearer "})
-     * @throws IllegalArgumentException if the annotation is of an unknown tenant type
+     * @param server the mock authentication server for stub mappings
+     * @param jwtTokenFactory factory to construct JWT tokens
+     * @param provider the signing provider for tokens
+     * @param tenant the annotation instance; must be one of the supported types
+     * @return a signed JWT string prefixed with "Bearer "
+     * @throws IllegalArgumentException when an unknown annotation is passed
      */
     private static String createToken(
             final WireMockAuthenticationServer server,
@@ -244,6 +281,10 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
         throw new IllegalArgumentException("Unknown tenant " + tenant);
     }
 
+    /**
+     * If the tenant realm is not yet registered with the provider, add it and push new certificate
+     * mappings to the server.
+     */
     private static void checkTenantExists(
             final WireMockAuthenticationServer server,
             final JwtTokenFactory jwtTokenFactory,
