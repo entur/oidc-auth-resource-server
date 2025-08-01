@@ -15,32 +15,42 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
- * TenantJsonWebToken is a JUnit extension that implements both {@link
- * org.junit.jupiter.api.extension.ParameterResolver} and {@link
- * org.junit.jupiter.api.extension.BeforeEachCallback} to support the injection and generation of
- * tenant-specific JSON Web Tokens (JWT) during testing.
+ * JUnit extension for generating and injecting tenant-specific JSON Web Tokens (JWTs) into test
+ * methods. This extension implements both {@link ParameterResolver} and {@link BeforeAllCallback}
+ * to ensure a WireMock-based authentication server is started and a {@link
+ * TenantAnnotationTokenFactory} is initialized once per test run.
  *
- * <p>This extension sets up a WireMock authentication server, reserves a port, and initializes the
- * JWT token factories needed to create tokens for different tenant types. It supports injection for
- * parameters that are annotated with tenant-specific annotations (such as {@code PartnerTenant},
- * {@code InternalTenant}, {@code TravellerTenant}, and {@code PersonTenant}), as well as for
- * parameters of type {@link org.entur.auth.junit.tenant.TenantAnnotationTokenFactory} or {@link
- * com.github.tomakehurst.wiremock.WireMockServer}.
+ * <p>Supported injection targets:
  *
- * <p>The supported tenant types are defined by the {@code SUPPORTED_TENANTS} array and correspond
- * to constants provided by the {@link org.entur.auth.junit.jwt.EnturProvider}.
+ * <ul>
+ *   <li>Parameters of type {@code String} annotated with one of the tenant annotations:
+ *       {@code @PartnerTenant}, {@code @InternalTenant}, {@code @TravellerTenant},
+ *       {@code @PersonTenant}, or {@code @TenantToken}. These will receive a JWT string for the
+ *       corresponding tenant.
+ *   <li>Parameters of type {@link TenantAnnotationTokenFactory}: injects the underlying token
+ *       factory.
+ *   <li>Parameters of type {@link WireMockAuthenticationServer}: injects the running WireMock
+ *       authentication server.
+ *   <li>Parameters of type {@link WireMock}: injects the WireMock client for stubbing and
+ *       verification.
+ * </ul>
+ *
+ * <p>Internally, the extension reserves a network port (named {@link #MOCKAUTHSERVER_PORT_NAME}),
+ * starts the WireMock server on that port, and reuses a fixed set of signing certificates to ensure
+ * Spring application context reuse across tests.
+ *
+ * @since 1.0
  */
 @Slf4j
 public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback {
-    /** The name used for reserving the port for the mock authentication server. */
+
+    /** Key name used to reserve and retrieve the port for the mock authentication server. */
     public static final String MOCKAUTHSERVER_PORT_NAME = "MOCKAUTHSERVER_PORT";
 
+    /** JWT provider implementation used to create tokens for supported tenants. */
     private static final Provider provider = new EnturProvider();
 
-    /**
-     * Map of Tenant identifiers supported by the JWT token factory -> tenant-specific annotation
-     * types that this extension supports.
-     */
+    /** List of tenant annotation types that this extension supports for parameter injection. */
     private static final List<Class<? extends Annotation>> TENANT_LIST =
             List.of(
                     PartnerTenant.class,
@@ -49,12 +59,17 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
                     PersonTenant.class,
                     TenantToken.class);
 
+    /** Singleton token factory responsible for issuing tenant-specific JWTs. */
     private static TenantAnnotationTokenFactory tokenFactory;
+
+    /** Manages reservation of the network port for the WireMock authentication server. */
     private static PortReservation portReservation;
 
     /**
-     * This before all callback initializes the WireMock authentication server, the JWT token factory,
-     * and the certificate mappings.
+     * Invoked once before all tests in the current execution. Ensures the WireMock server and token
+     * factory are initialized and ready for use.
+     *
+     * @param context the current {@link ExtensionContext}, never {@code null}
      */
     @Override
     public void beforeAll(ExtensionContext context) {
@@ -62,17 +77,21 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     }
 
     /**
-     * Determines if the given parameter is supported by this extension.
+     * Determines whether this extension can supply a value for the given test method parameter.
+     * Supported types are:
      *
-     * <p>A parameter is considered supported if it is annotated with one of the tenant annotations,
-     * or if its type is either {@link org.entur.auth.junit.tenant.TenantAnnotationTokenFactory} or
-     * {@link com.github.tomakehurst.wiremock.WireMockServer}.
+     * <ul>
+     *   <li>{@code String} parameters annotated with a supported tenant annotation
+     *   <li>{@link TenantAnnotationTokenFactory}
+     *   <li>{@link WireMockAuthenticationServer}
+     *   <li>{@link WireMock}
+     * </ul>
      *
      * @param parameterContext the context for the parameter to be resolved
-     * @param extensionContext the current extension context; never {@code null}
-     * @return {@code true} if the parameter is supported; {@code false} otherwise
-     * @throws org.junit.jupiter.api.extension.ParameterResolutionException if parameter resolution
-     *     fails
+     * @param extensionContext the current {@link ExtensionContext}, never {@code null}
+     * @return {@code true} if this extension supports resolving the parameter; {@code false}
+     *     otherwise
+     * @throws ParameterResolutionException if parameter inspection fails
      */
     @Override
     public boolean supportsParameter(
@@ -94,18 +113,20 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     }
 
     /**
-     * Resolves the parameter for injection.
+     * Resolves and injects the parameter value for supported test method parameters.
      *
-     * <p>For parameters annotated with a tenant-specific annotation, this method returns a JSON Web
-     * Token generated by the {@link org.entur.auth.junit.tenant.TenantAnnotationTokenFactory}. For
-     * parameters of type {@link org.entur.auth.junit.tenant.TenantAnnotationTokenFactory}, it returns
-     * the token factory instance.
+     * <ul>
+     *   <li>For {@code String} parameters annotated with a tenant annotation, returns a JWT for that
+     *       tenant.
+     *   <li>For {@link TenantAnnotationTokenFactory}, returns the configured token factory.
+     *   <li>For {@link WireMockAuthenticationServer}, returns the running server instance.
+     *   <li>For {@link WireMock}, returns the WireMock client for request stubbing.
+     * </ul>
      *
      * @param parameterContext the context for the parameter to be resolved
-     * @param extensionContext the current extension context; never {@code null}
-     * @return the resolved parameter value
-     * @throws org.junit.jupiter.api.extension.ParameterResolutionException if the parameter cannot be
-     *     resolved
+     * @param extensionContext the current {@link ExtensionContext}, never {@code null}
+     * @return the object to inject into the test method parameter
+     * @throws ParameterResolutionException if the parameter is not supported or resolution fails
      */
     @Override
     public Object resolveParameter(
@@ -130,24 +151,26 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
         throw new CanNotResolveParameterException();
     }
 
+    /**
+     * Initializes the {@link TenantAnnotationTokenFactory} and starts the WireMock server on a
+     * reserved port if not already started. Ensures the same signing certificates are reused across
+     * test contexts to support Spring context reuse.
+     */
     public static void setupTokenFactory() {
-        // this code should run before the spring context starts, but in case the class is not loaded,
-        // the spring context will run first.
-        // In which case the MOCKAUTHSERVER_PORT port must be a free port.
-        if (portReservation == null) {
-            portReservation = new PortReservation(MOCKAUTHSERVER_PORT_NAME);
-        }
+        synchronized (provider) {
+            if (portReservation == null) {
+                portReservation = new PortReservation(MOCKAUTHSERVER_PORT_NAME);
+            }
 
-        // Initiate portReservation
-        if (portReservation.getPort() < 0) {
-            portReservation.start();
-        }
+            // Reserve and start the WireMock server port if needed
+            if (portReservation.getPort() < 0) {
+                portReservation.start();
+            }
 
-        // Run with a fixed set of certificates so that spring context reuse works:
-        // Context A loads the certificates, context B (i.e. not-dirty A context) uses those
-        // certificates to validate tokens.
-        if (tokenFactory == null) {
-            tokenFactory = new TenantAnnotationTokenFactory(provider, portReservation);
+            // Create the token factory once, linking it to the provider and reserved port
+            if (tokenFactory == null) {
+                tokenFactory = new TenantAnnotationTokenFactory(provider, portReservation);
+            }
         }
     }
 }
