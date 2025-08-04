@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
 
 /**
@@ -27,11 +26,10 @@ import lombok.NonNull;
  */
 public class JwtTokenFactory {
     /** Nested map of key pairs indexed first by provider name, then by tenant domain. */
-    private final Map<String, Map<String, KeyPair>> keyPairsByTenantByProvider =
-            new ConcurrentHashMap<>();
+    private final Map<String, Map<String, KeyPair>> keyPairsByTenantByProvider = new HashMap<>();
 
     /** Lookup map from provider name to its {@link Provider} instance. */
-    private final Map<String, Provider> providerMap = new ConcurrentHashMap<>();
+    private final Map<String, Provider> providerMap = new HashMap<>();
 
     /** RSA key-pair generator (2048-bit). */
     private final KeyPairGenerator keyGen;
