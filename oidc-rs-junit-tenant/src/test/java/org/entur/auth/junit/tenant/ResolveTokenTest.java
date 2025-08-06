@@ -10,8 +10,11 @@ import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @ExtendWith(TenantJsonWebToken.class)
+@Execution(ExecutionMode.CONCURRENT)
 class ResolveTokenTest {
 
     @Test
