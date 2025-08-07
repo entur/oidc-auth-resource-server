@@ -58,6 +58,10 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
             @NonNull final Provider provider, @NonNull final PortReservation portReservation) {
         this.provider = provider;
         this.portReservation = portReservation;
+
+        /* Ensure the WireMock server is running, reserving the port if needed. */
+        portReservation.stop();
+        setServer(new WireMockAuthenticationServer(portReservation.getPort()));
     }
 
     /**
@@ -66,7 +70,6 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
      * @return the running {@link WireMockAuthenticationServer}
      */
     public WireMockAuthenticationServer getServer() {
-        checkServer();
         return server;
     }
 
@@ -144,16 +147,7 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
      */
     public String createToken(final Annotation tenant) {
         synchronized (provider) {
-            checkServer();
             return createToken(server, jwtTokenFactory, provider, tenant);
-        }
-    }
-
-    /** Ensure the WireMock server is running, reserving the port if needed. */
-    private void checkServer() {
-        if (this.server == null) {
-            portReservation.stop();
-            setServer(new WireMockAuthenticationServer(portReservation.getPort()));
         }
     }
 

@@ -61,6 +61,8 @@ spotbugsMain {
  * Test plugins
  *************************************************************/
 test {
+    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+
     useJUnitPlatform()
 
     reports {
