@@ -232,6 +232,8 @@ entur:
       - issuerUrl: https://partner.mock.entur.io
         certificateUrl: http://localhost:${MOCKAUTHSERVER_PORT}/partner/.well-known/jwks.json
 ```
+> [!IMPORTANT]
+> Environment variable ${MOCKAUTHSERVER_PORT} will be automatically defined when TenantJsonWebToken.class is used as extension.
 
 Example of JUnit test:
 
