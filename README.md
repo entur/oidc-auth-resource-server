@@ -235,9 +235,20 @@ entur:
 > [!IMPORTANT]
 > Environment variable ${MOCKAUTHSERVER_PORT} will be automatically defined when TenantJsonWebToken.class is used as extension.
 
-Example of JUnit test:
+> [!TIP]
+> When configure test clas with: ```@TestInstance(TestInstance.Lifecycle.PER_CLASS)``` may it be necessary to use ```@DynamicPropertySource``` and call ```TenantJsonWebToken.setupTokenFactory()```.
+
+> [!TIP]
+> When tests fails with **"Couldn't retrieve JWK set from URL: Read timed out"**, can it help to explicit configure ```entur.auth.lazy-load: true``` for your tests.
+
+### Example of JUnit test with @SpringBootTest:
 
 ```java
+@TestPropertySource(
+        properties = {
+                "entur.auth.tenants.environment=mock",
+                "entur.auth.tenants.include=internal,partner",
+        })
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -256,11 +267,41 @@ class AuthorizeTest {
 }
 ```
 
-> [!TIP]
-> When configure test clas with: ```@TestInstance(TestInstance.Lifecycle.PER_CLASS)``` may it be necessary to use ```@DynamicPropertySource``` and call ```TenantJsonWebToken.setupTokenFactory()```.
+### Example of JUnit test with @WebMvcTest:
 
-> [!TIP]
-> When tests fails with **"Couldn't retrieve JWK set from URL: Read timed out"**, can it help to explicit configure ```entur.auth.lazy-load: true``` for your tests.
+```java
+@TestPropertySource(
+        properties = {
+                "entur.auth.lazy-load=true",
+                "entur.auth.tenants.environment=mock",
+                "entur.auth.tenants.include=internal,partner",
+        })
+@ExtendWith({TenantJsonWebToken.class})                      // Needed to define MOCKAUTHSERVER_PORT and support parameter to be resolved
+@WebMvcTest({GreetingController.class})
+@ImportAutoConfiguration({
+        ResourceServerAutoConfiguration.class,               // Configure default SecurityFilterChain
+        ResourceServerDefaultAutoConfiguration.class,        // Configure default Spring Security behavior
+        ConfigAuthProvidersAutoConfiguration.class,          // Configure predefined tenants environment
+        ConfigAuthManagerResolverAutoConfiguration.class,    // Configure use tenants.environment
+        ConfigResourceServerAutoConfiguration.class,         // Configure authorization, cors, mdc, issuers
+        ConfigJwksHealthIndicatorAutoConfiguration.class     // Configure management endpoint jwksState working
+        //ConfigExternalPropertyAutoConfiguration.class      // Optional: If you read issuers from property file
+})
+class AuthorizeTest {
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void testProtectedWithPartner(@PartnerTenant(clientId = "clientId", subject = "subject") String authorization) throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", authorization);
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
+    }
+}
+```
+
 
 ## Customising the SecurityFilterChain
 If additional customising of SecurityFilterChain is needed, it can be provided by implementing own Spring Bean's.
