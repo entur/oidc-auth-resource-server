@@ -16,6 +16,7 @@ import org.entur.auth.spring.common.server.ServerCondition;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
 import org.entur.auth.spring.config.server.JWKSourceWithIssuer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -40,9 +41,7 @@ public class ConfigAuthManagerResolverAutoConfiguration {
 
     private final EnturAuthProperties enturAuthProperties;
     private final AuthProviders authProviders;
-    private final HealthReportListener<
-                    JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
-            healthReportListener;
+    private final ObjectProvider<HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>> healthReportListener;
 
     @Bean
     public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
@@ -58,6 +57,11 @@ public class ConfigAuthManagerResolverAutoConfiguration {
             log.info("Tenant include = {}", tenantsProperties.getInclude());
         }
 
+        var listner = healthReportListener.getIfAvailable();
+        if (listner == null) {
+            log.info("HealthReportListener not configured");
+        }
+
         var environmentIssuerProperties =
                 authProviders.get(tenantsProperties.getEnvironment(), tenantsProperties.getInclude());
 
@@ -67,7 +71,7 @@ public class ConfigAuthManagerResolverAutoConfiguration {
                         remoteJWKSets,
                         enturAuthProperties,
                         authoritiesConverter,
-                        healthReportListener);
+                        listner);
         environmentIssuerProperties.forEach(managerResolver::addIssuer);
         issuerProperties.forEach(managerResolver::addIssuer);
         externalProperties.getFilteredIssuers().forEach(managerResolver::addIssuer);

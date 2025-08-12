@@ -284,8 +284,8 @@ class AuthorizeTest {
         ConfigAuthProvidersAutoConfiguration.class,          // Configure predefined tenants environment
         ConfigAuthManagerResolverAutoConfiguration.class,    // Configure use tenants.environment
         ConfigResourceServerAutoConfiguration.class,         // Configure authorization, cors, mdc, issuers
-        ConfigJwksHealthIndicatorAutoConfiguration.class     // Configure management endpoint jwksState working
-        //ConfigExternalPropertyAutoConfiguration.class      // Optional: If you read issuers from property file
+        ConfigJwksHealthIndicatorAutoConfiguration.class,    // Optional: If you use management endpoint jwksState
+        ConfigExternalPropertyAutoConfiguration.class        // Optional: If you read issuers from property file
 })
 class AuthorizeTest {
     @Autowired

@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-client)
 
+## oidc-auth-resource-server v1.1.2
+* Make ConfigJwksHealthIndicatorAutoConfiguration optional whn using @WebMvcTest.
+
 ## oidc-auth-resource-server v1.1.1
 * Add use of synchronized to oidc-rs-junit-tenant.
 
