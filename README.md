@@ -302,6 +302,52 @@ class AuthorizeTest {
 }
 ```
 
+### Example of JUnit test with reactive and @WebFluxTest:
+
+```java
+@TestPropertySource(
+        properties = {
+                "entur.auth.lazy-load=true",
+                "entur.auth.tenants.environment=mock",
+                "entur.auth.tenants.include=internal,partner",
+        })
+@ExtendWith({TenantJsonWebToken.class})                      // Needed to define MOCKAUTHSERVER_PORT and support parameter to be resolved
+@WebFluxTest({GreetingController.class})
+@ImportAutoConfiguration({
+        ReactiveResourceServerAutoConfiguration.class,               // Configure default SecurityFilterChain
+        ReactiveResourceServerDefaultAutoConfiguration.class,        // Configure default Spring Security behavior
+        ConfigReactiveAuthProvidersAutoConfiguration.class,          // Configure predefined tenants environment
+        ConfigReactiveAuthManagerResolverAutoConfiguration.class,    // Configure use tenants.environment
+        ConfigReactiveResourceServerAutoConfiguration.class,         // Configure authorization, cors, mdc, issuers
+        ConfigReactiveJwksHealthIndicatorAutoConfiguration.class,    // Optional: If you use management endpoint jwksState
+        ConfigReactiveExternalPropertyAutoConfiguration.class        // Optional: If you read issuers from property file
+})
+class AuthorizeTest {
+    @Autowired
+    private WebTestClient webTestClient;
+
+    @Test
+    void testProtectedWithPartner(@PartnerTenant(clientId = "clientId", subject = "subject") String authorization) throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", authorization);
+
+        mockMvc.perform(get("/protected").headers(requestHeaders)).andExpect(status().isOk());
+
+        webTestClient
+                .get()
+                .uri("/protected")
+                .headers(
+                        httpHeaders -> {
+                            httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+                            httpHeaders.add("Authorization", authorization);
+                        })
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+}
+```
 
 ## Customising the SecurityFilterChain
 If additional customising of SecurityFilterChain is needed, it can be provided by implementing own Spring Bean's.

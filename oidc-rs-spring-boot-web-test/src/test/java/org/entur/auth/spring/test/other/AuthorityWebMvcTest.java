@@ -28,9 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
             "entur.auth.tenants.environment=mock",
             "entur.auth.tenants.include=internal,partner",
         })
-@ExtendWith({
-    TenantJsonWebToken.class
-})
+@ExtendWith({TenantJsonWebToken.class})
 @WebMvcTest({GreetingController.class})
 @ImportAutoConfiguration({
     ResourceServerAutoConfiguration.class,

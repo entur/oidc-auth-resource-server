@@ -41,7 +41,10 @@ public class ConfigAuthManagerResolverAutoConfiguration {
 
     private final EnturAuthProperties enturAuthProperties;
     private final AuthProviders authProviders;
-    private final ObjectProvider<HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>> healthReportListener;
+    private final ObjectProvider<
+                    HealthReportListener<
+                            JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>>
+            healthReportListener;
 
     @Bean
     public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
