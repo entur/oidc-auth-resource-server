@@ -1,0 +1,12 @@
+apiVersion: entur.io/securitytools/v1
+kind: DockerScanConfig
+metadata:
+  id: oidcauthclientallowlist
+  name: oidc-auth-client-allow-list
+  owner: team-sikkerhet
+spec:
+  allowlist:
+    - cve: "CVE-2025-55163"
+      comment: "Netty affected by MadeYouReset HTTP/2 DDoS vulnerability"
+      reason: "wont_fix"
+
