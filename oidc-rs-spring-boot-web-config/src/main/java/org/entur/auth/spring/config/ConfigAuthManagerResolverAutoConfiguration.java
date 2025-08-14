@@ -36,8 +36,8 @@ import org.springframework.security.authentication.AuthenticationManagerResolver
 @EnableConfigurationProperties({EnturAuthProperties.class})
 @RequiredArgsConstructor
 public class ConfigAuthManagerResolverAutoConfiguration {
-    Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
-    List<JWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+    private final Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
+    private final List<JWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
 
     private final EnturAuthProperties enturAuthProperties;
     private final AuthProviders authProviders;
@@ -49,26 +49,26 @@ public class ConfigAuthManagerResolverAutoConfiguration {
     @Bean
     public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
-        var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
+        final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
-        var tenantsProperties = enturAuthProperties.getTenants();
-        var issuerProperties = enturAuthProperties.getIssuers();
-        var externalProperties = enturAuthProperties.getExternal();
+        final var tenantsProperties = enturAuthProperties.getTenants();
+        final var issuerProperties = enturAuthProperties.getIssuers();
+        final var externalProperties = enturAuthProperties.getExternal();
 
         if (tenantsProperties.getEnvironment() != null || tenantsProperties.getInclude() != null) {
             log.info("Tenant environment = {}", tenantsProperties.getEnvironment());
             log.info("Tenant include = {}", tenantsProperties.getInclude());
         }
 
-        var listner = healthReportListener.getIfAvailable();
+        final var listner = healthReportListener.getIfAvailable();
         if (listner == null) {
             log.info("HealthReportListener not configured");
         }
 
-        var environmentIssuerProperties =
+        final var environmentIssuerProperties =
                 authProviders.get(tenantsProperties.getEnvironment(), tenantsProperties.getInclude());
 
-        var managerResolver =
+        final var managerResolver =
                 new IssuerAuthenticationManagerResolver(
                         authenticationManagers,
                         remoteJWKSets,

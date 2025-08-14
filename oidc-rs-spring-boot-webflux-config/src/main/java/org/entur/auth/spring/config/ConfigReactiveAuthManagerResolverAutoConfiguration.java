@@ -43,39 +43,39 @@ public class ConfigReactiveAuthManagerResolverAutoConfiguration {
                             JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>>
             healthReportListener;
 
-    Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
-    List<ReactiveJWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+    private final Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
+    private final List<ReactiveJWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
 
     @Bean
     public ReactiveAuthenticationManagerResolver<ServerWebExchange>
             reactiveAuthenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
-        var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
+        final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
-        var tenantsProperties = enturAuthProperties.getTenants();
-        var issuerProperties = enturAuthProperties.getIssuers();
-        var externalProperties = enturAuthProperties.getExternal();
+        final var tenantsProperties = enturAuthProperties.getTenants();
+        final var issuerProperties = enturAuthProperties.getIssuers();
+        final var externalProperties = enturAuthProperties.getExternal();
 
         if (tenantsProperties.getEnvironment() != null || tenantsProperties.getInclude() != null) {
             log.info("Tenant environment = {}", tenantsProperties.getEnvironment());
             log.info("Tenant include = {}", tenantsProperties.getInclude());
         }
 
-        var listner = healthReportListener.getIfAvailable();
-        if (listner == null) {
+        final var listener = healthReportListener.getIfAvailable();
+        if (listener == null) {
             log.info("HealthReportListener not configured");
         }
 
-        var environmentIssuerProperties =
+        final var environmentIssuerProperties =
                 authProviders.get(tenantsProperties.getEnvironment(), tenantsProperties.getInclude());
 
-        var managerResolver =
+        final var managerResolver =
                 new ReactiveIssuerAuthenticationManagerResolver(
                         authenticationManagers,
                         remoteJWKSets,
                         enturAuthProperties,
                         authoritiesConverter,
-                        listner);
+                        listener);
         environmentIssuerProperties.forEach(managerResolver::addIssuer);
         issuerProperties.forEach(managerResolver::addIssuer);
         externalProperties.getFilteredIssuers().forEach(managerResolver::addIssuer);
