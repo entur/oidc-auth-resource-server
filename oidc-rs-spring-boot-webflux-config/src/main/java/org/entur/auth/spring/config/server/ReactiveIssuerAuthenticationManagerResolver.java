@@ -38,10 +38,8 @@ public final class ReactiveIssuerAuthenticationManagerResolver
             @NonNull List<ReactiveJWKSourceWithIssuer> remoteJWKSets,
             @NonNull EnturAuthProperties enturAuthProperties,
             @NonNull TenantJwtGrantedAuthoritiesConverter authoritiesConverter,
-            @NonNull
-                    HealthReportListener<
-                                    JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
-                            healthReportListener) {
+            HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
+                    healthReportListener) {
 
         this.authenticationManagers = authenticationManagers;
         this.remoteJWKSets = new ArrayList<>(remoteJWKSets);

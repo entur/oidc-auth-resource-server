@@ -16,10 +16,6 @@ compileJava {
 }
 
 dependencies {
-    if(project.hasProperty('jacksonDatabindVersion')) {
-        testImplementation("com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}")
-    }
-
     if(project.hasProperty('junitJupiterVersion')) {
         testImplementation(platform("org.junit:junit-bom:${junitJupiterVersion}"))
         testImplementation('org.junit.jupiter:junit-jupiter')

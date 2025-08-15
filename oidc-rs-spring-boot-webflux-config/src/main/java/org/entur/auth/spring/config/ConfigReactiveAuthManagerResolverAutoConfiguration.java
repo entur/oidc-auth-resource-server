@@ -15,6 +15,7 @@ import org.entur.auth.spring.common.server.ServerCondition;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.config.server.ReactiveIssuerAuthenticationManagerResolver;
 import org.entur.auth.spring.config.server.ReactiveJWKSourceWithIssuer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -37,38 +38,44 @@ import org.springframework.web.server.ServerWebExchange;
 public class ConfigReactiveAuthManagerResolverAutoConfiguration {
     private final EnturAuthProperties enturAuthProperties;
     private final AuthProviders authProviders;
-    private final HealthReportListener<
-                    JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
+    private final ObjectProvider<
+                    HealthReportListener<
+                            JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>>
             healthReportListener;
 
-    Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
-    List<ReactiveJWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+    private final Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
+    private final List<ReactiveJWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
 
     @Bean
     public ReactiveAuthenticationManagerResolver<ServerWebExchange>
             reactiveAuthenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
-        var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
+        final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
-        var tenantsProperties = enturAuthProperties.getTenants();
-        var issuerProperties = enturAuthProperties.getIssuers();
-        var externalProperties = enturAuthProperties.getExternal();
+        final var tenantsProperties = enturAuthProperties.getTenants();
+        final var issuerProperties = enturAuthProperties.getIssuers();
+        final var externalProperties = enturAuthProperties.getExternal();
 
         if (tenantsProperties.getEnvironment() != null || tenantsProperties.getInclude() != null) {
             log.info("Tenant environment = {}", tenantsProperties.getEnvironment());
             log.info("Tenant include = {}", tenantsProperties.getInclude());
         }
 
-        var environmentIssuerProperties =
+        final var listener = healthReportListener.getIfAvailable();
+        if (listener == null) {
+            log.info("HealthReportListener not configured");
+        }
+
+        final var environmentIssuerProperties =
                 authProviders.get(tenantsProperties.getEnvironment(), tenantsProperties.getInclude());
 
-        var managerResolver =
+        final var managerResolver =
                 new ReactiveIssuerAuthenticationManagerResolver(
                         authenticationManagers,
                         remoteJWKSets,
                         enturAuthProperties,
                         authoritiesConverter,
-                        healthReportListener);
+                        listener);
         environmentIssuerProperties.forEach(managerResolver::addIssuer);
         issuerProperties.forEach(managerResolver::addIssuer);
         externalProperties.getFilteredIssuers().forEach(managerResolver::addIssuer);
