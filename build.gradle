@@ -10,7 +10,7 @@ subprojects {
     ext {
         springBoot3Version = '3.5.4'
         javaJwtVersion = '4.5.0'
-        jjwtVersion = '0.12.6'
+        jjwtVersion = '0.12.7'
         apacheCommonsVersion = '2.20.0'
         slf4jVersion = '2.0.17'
 
