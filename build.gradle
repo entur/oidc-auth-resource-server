@@ -2,15 +2,15 @@ plugins {
     id 'base'
     id 'org.jreleaser' version "1.19.0"
     id 'com.github.ben-manes.versions' version '0.52.0' apply false
-    id "com.github.spotbugs" version "6.2.4" apply false
+    id "com.github.spotbugs" version "6.2.5" apply false
     id 'com.diffplug.spotless' version "7.2.1" apply false
 }
 
 subprojects {
     ext {
-        springBoot3Version = '3.5.4'
+        springBoot3Version = '3.5.5'
         javaJwtVersion = '4.5.0'
-        jjwtVersion = '0.12.7'
+        jjwtVersion = '0.13.0'
         apacheCommonsVersion = '2.20.0'
         slf4jVersion = '2.0.17'
 
