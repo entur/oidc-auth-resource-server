@@ -65,6 +65,11 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     /** Manages reservation of the network port for the WireMock authentication server. */
     private static PortReservation portReservation;
 
+    /** Construct a new TenantJsonWebToken and initializes the reserved port */
+    public TenantJsonWebToken() {
+        setupPortReservation();
+    }
+
     /**
      * Invoked once before all tests in the current execution. Ensures the WireMock server and token
      * factory are initialized and ready for use.
@@ -73,7 +78,7 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
      */
     @Override
     public void beforeAll(ExtensionContext context) {
-        setupTokenFactory();
+        setupTenantAnnotation();
     }
 
     /**
@@ -157,6 +162,22 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
      * test contexts to support Spring context reuse.
      */
     public static void setupTokenFactory() {
+        setupPortReservation();
+        setupTenantAnnotation();
+    }
+
+    /** Initializes and starts the TenantAnnotationTokenFactory if not already started. */
+    private static void setupTenantAnnotation() {
+        synchronized (provider) {
+            // Create the token factory once, linking it to the provider and reserved port
+            if (tokenFactory == null) {
+                tokenFactory = new TenantAnnotationTokenFactory(provider, portReservation);
+            }
+        }
+    }
+
+    /** Initializes and starts the reserved port if not already started. */
+    private static void setupPortReservation() {
         synchronized (provider) {
             if (portReservation == null) {
                 portReservation = new PortReservation(MOCKAUTHSERVER_PORT_NAME);
@@ -165,11 +186,6 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
             // Reserve and start the WireMock server port if needed
             if (portReservation.getPort() < 0) {
                 portReservation.start();
-            }
-
-            // Create the token factory once, linking it to the provider and reserved port
-            if (tokenFactory == null) {
-                tokenFactory = new TenantAnnotationTokenFactory(provider, portReservation);
             }
         }
     }

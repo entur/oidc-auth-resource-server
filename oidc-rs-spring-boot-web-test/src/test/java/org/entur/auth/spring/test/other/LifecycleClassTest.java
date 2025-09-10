@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,9 +24,13 @@ import org.springframework.test.web.servlet.MockMvc;
 public class LifecycleClassTest {
     @Autowired private MockMvc mockMvc;
 
-    @DynamicPropertySource
-    static void registerProps(DynamicPropertyRegistry registry) {
-        TenantJsonWebToken.setupTokenFactory();
+    @BeforeAll
+    void statup(@InternalTenant(clientId = "clientId") String authorization) throws Exception {
+        var requestHeaders = new HttpHeaders();
+        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHeaders.add("Authorization", authorization);
+
+        mockMvc.perform(get("/internal").headers(requestHeaders)).andExpect(status().isOk());
     }
 
     @Test
