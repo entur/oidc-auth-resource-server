@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-client)
 
+## oidc-auth-resource-server v1.1.3
+* Moved port reservation from beforeAll into aconstuctor of TenantJsonWebToken.
+
 ## oidc-auth-resource-server v1.1.2
 * Make ConfigJwksHealthIndicatorAutoConfiguration optional whn using @WebMvcTest.
 
