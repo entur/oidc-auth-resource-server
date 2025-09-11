@@ -139,6 +139,8 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
             throws ParameterResolutionException {
 
         if (parameterContext.getParameter().getType() == String.class) {
+            setupTenantAnnotation(); // Added her to support parameter annotation in JUnit test class
+            // constructor
             for (var entry : TENANT_LIST) {
                 Optional<? extends Annotation> annotation = parameterContext.findAnnotation(entry);
                 if (annotation.isPresent()) {
@@ -146,10 +148,16 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
                 }
             }
         } else if (parameterContext.getParameter().getType() == TenantAnnotationTokenFactory.class) {
+            setupTenantAnnotation(); // Added her to support parameter annotation in JUnit test class
+            // constructor
             return tokenFactory;
         } else if (parameterContext.getParameter().getType() == WireMockAuthenticationServer.class) {
+            setupTenantAnnotation(); // Added her to support parameter annotation in JUnit test class
+            // constructor
             return tokenFactory.getServer();
         } else if (parameterContext.getParameter().getType() == WireMock.class) {
+            setupTenantAnnotation(); // Added her to support parameter annotation in JUnit test class
+            // constructor
             return tokenFactory.getServer().getMockServer();
         }
 
