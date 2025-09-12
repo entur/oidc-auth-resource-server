@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-client)
 
+## oidc-auth-resource-server v1.1.4
+* Add support for parameter annotation in JUnit test classes.
+
 ## oidc-auth-resource-server v1.1.3
 * Moved port reservation from beforeAll into aconstuctor of TenantJsonWebToken.
 
