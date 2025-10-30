@@ -1,3 +1,12 @@
+buildscript {
+    configurations.classpath {
+        resolutionStrategy {
+            // Fix https://github.com/jreleaser/jreleaser/issues/1643
+            force 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'
+        }
+    }
+}
+
 plugins {
     id 'base'
     id 'org.jreleaser' version "1.20.0"
