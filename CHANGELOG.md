@@ -1,6 +1,6 @@
 # [Release notes](https://github.com/entur/oidc-auth-client)
 
-## oidc-auth-resource-server v1.2.0
+## oidc-auth-resource-server v2.0.0
 * Changed actuator permit from actuator/** too individual paths.
 
 ## oidc-auth-resource-server v1.1.4
