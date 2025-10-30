@@ -21,8 +21,26 @@ public class ReactiveAuthorizationHelper {
         AuthorizationPermitAllProperties permitAll = authorization.getPermitAll();
 
         if (permitAll.isActuator() && managementBasePath != null) {
-            authorizeExchangeSpec.pathMatchers(managementBasePath + "/**").permitAll();
-            log.info("All authorize requests to {}/** will be permitted", managementBasePath);
+            authorizeExchangeSpec
+                    .pathMatchers(
+                            managementBasePath,
+                            managementBasePath + "/prometheus",
+                            managementBasePath + "/info",
+                            managementBasePath + "/metrics",
+                            managementBasePath + "/health",
+                            managementBasePath + "/health/readiness",
+                            managementBasePath + "/health/liveness")
+                    .permitAll();
+
+            log.info(
+                    "All authorize requests to {}, {}/prometheus, {}/info, {}/metrics, {}/health, {}/health/readiness, {}/health/liveness will be permitted",
+                    managementBasePath,
+                    managementBasePath,
+                    managementBasePath,
+                    managementBasePath,
+                    managementBasePath,
+                    managementBasePath,
+                    managementBasePath);
         }
 
         if (permitAll.isOpenApi()) {

@@ -116,7 +116,7 @@ public class JwtTokenFactory {
      * @param audience (optional) array of audience values; may be {@code null}
      * @param claims (optional) additional custom claims to include; may be {@code null}
      * @param expiresAt the expiration time of the token (must be in the future)
-     * @return a signed JWT compact‐serialization string
+     * @return a signed JWT compact serialization string
      * @throws IllegalArgumentException if no key pair exists for the given {@code provider}/{@code
      *     domain}
      */
