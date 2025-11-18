@@ -9,9 +9,9 @@ buildscript {
 
 plugins {
     id 'base'
-    id 'org.jreleaser' version "1.20.0"
+    id 'org.jreleaser' version "1.21.0"
     id 'com.github.ben-manes.versions' version '0.53.0' apply false
-    id "com.github.spotbugs" version "6.4.4" apply false
+    id "com.github.spotbugs" version "6.4.5" apply false
     id 'com.diffplug.spotless' version "8.0.0" apply false
 }
 
@@ -20,13 +20,13 @@ subprojects {
         springBoot3Version = '3.5.7'
         javaJwtVersion = '4.5.0'
         jjwtVersion = '0.13.0'
-        apacheCommonsVersion = '2.20.0'
+        apacheCommonsVersion = '2.21.0'
         slf4jVersion = '2.0.17'
 
         junitPlatformVersion = '1.12.2'
-        junitJupiterVersion  = '6.0.0'
-        wiremockVersion = '3.13.1'
-        logback14xVersion = '1.5.20'
+        junitJupiterVersion  = '6.0.1'
+        wiremockVersion = '3.13.2'
+        logback14xVersion = '1.5.21'
 
         lombokVersion = '1.18.42'
     }
