@@ -2,7 +2,7 @@ buildscript {
     configurations.classpath {
         resolutionStrategy {
             // Fix https://github.com/jreleaser/jreleaser/issues/1643
-            force 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'
+            force 'org.eclipse.jgit:org.eclipse.jgit:7.5.0.202512021534-r'
         }
     }
 }
@@ -17,7 +17,7 @@ plugins {
 
 subprojects {
     ext {
-        springBoot3Version = '3.5.7'
+        springBoot3Version = '4.0.2'
         javaJwtVersion = '4.5.0'
         jjwtVersion = '0.13.0'
         apacheCommonsVersion = '2.21.0'
