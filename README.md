@@ -183,7 +183,7 @@ entur:
 entur:
   auth:
     lazy-load: true | false  # When using RSA certificates can JWKS load be delayed. Default = false.
-    retry-on-failure: true | false # When true will failure on loading JWKS be retried. Default = false.
+    retry-on-failure: true | false # When true will failure on loading JWKS be retried. Default = true.
     connect-timeout: <seconds> # Numbus Resource Retriever - connectTimeout. Default = 5 seconds.
     read-timeout: <seconds> # Numbus Resource Retriever - readTimeout. Default = 5 seconds.
     jwks-throttle-wait: <seconds> # Numbus JWKSourceBuilder - rateLimited. Default = 30 seconds.
