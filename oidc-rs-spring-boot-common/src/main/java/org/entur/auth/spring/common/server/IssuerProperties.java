@@ -17,5 +17,5 @@ public class IssuerProperties {
     private Integer refreshAheadTime;
     private Integer cacheRefreshTimeout;
     private Integer cacheLifespan;
-    private Integer outageTolerant;
+    private Long outageTolerant;
 }
