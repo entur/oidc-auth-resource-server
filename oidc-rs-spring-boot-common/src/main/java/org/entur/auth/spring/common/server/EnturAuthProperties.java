@@ -17,7 +17,7 @@ public class EnturAuthProperties {
     private int refreshAheadTime = 30;
     private int cacheRefreshTimeout = 15;
     private int cacheLifespan = 300;
-    private int outageTolerant = 300;
+    private long outageTolerant = 300;
 
     private List<IssuerProperties> issuers = new ArrayList<>();
     private TenantsProperties tenants = new TenantsProperties();
