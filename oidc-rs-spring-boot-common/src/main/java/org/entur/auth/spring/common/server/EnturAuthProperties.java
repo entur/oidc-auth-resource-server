@@ -1,5 +1,7 @@
 package org.entur.auth.spring.common.server;
 
+import static java.util.concurrent.TimeUnit.HOURS;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -17,7 +19,7 @@ public class EnturAuthProperties {
     private int refreshAheadTime = 30;
     private int cacheRefreshTimeout = 15;
     private int cacheLifespan = 300;
-    private long outageTolerant = 300;
+    private long outageTolerant = HOURS.toSeconds(10);
 
     private List<IssuerProperties> issuers = new ArrayList<>();
     private TenantsProperties tenants = new TenantsProperties();

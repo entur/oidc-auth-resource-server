@@ -190,7 +190,7 @@ entur:
     refresh-ahead-time: <seconds> # Numbus RefreshAheadCache - refreshAheadTime. Default = 30 seconds.
     cache-refresh-timeout: <seconds> # Numbus Cache - cacheRefreshTimeout. Default = 15 seconds.
     cache-lifespan: <seconds> # Numbus Cache - cacheLifespan. Default = 300 seconds.
-    outage-tolerant: <seconds> # Numbus Cache - cacheLifespan. Default = 300 seconds.
+    outage-tolerant: <seconds> # Numbus Cache - cacheLifespan. Default = 36000 seconds (10 hours).
 ```
 
 On issuer confguration can this values be overwritten:
@@ -206,7 +206,7 @@ entur:
         refresh-ahead-time: <seconds> # Numbus RefreshAheadCache - refreshAheadTime. 
         cache-refresh-timeout: <seconds> # Numbus Cache - cacheRefreshTimeout. 
         cache-lifespan: <seconds> # Numbus Cache - cacheLifespan. 
-        outage-tolerant: <seconds> # Numbus Cache - outageTolerant. Default = 300 seconds.
+        outage-tolerant: <seconds> # Numbus Cache - outageTolerant. Default = 36000 seconds (10 hours).
 ```
 
 ## Testing
