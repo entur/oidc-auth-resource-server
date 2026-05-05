@@ -3,7 +3,6 @@ package org.entur.auth.spring.config;
 import com.nimbusds.jose.jwk.source.JWKSetSourceWithHealthStatusReporting;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.health.HealthReportListener;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,7 @@ public class ConfigAuthManagerResolverAutoConfiguration {
             healthReportListener;
 
     @Bean
-    public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
+    public IssuerAuthenticationManagerResolver authenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
         final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
