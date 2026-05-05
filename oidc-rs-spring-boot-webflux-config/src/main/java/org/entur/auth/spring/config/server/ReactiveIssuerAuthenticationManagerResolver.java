@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NonNull;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
@@ -25,7 +26,7 @@ public final class ReactiveIssuerAuthenticationManagerResolver
         implements ReactiveAuthenticationManagerResolver<ServerWebExchange>, SupportsReadiness {
 
     private final Map<String, ReactiveAuthenticationManager> authenticationManagers;
-    private final List<JWKSourceWithIssuer<?>> remoteJWKSets;
+    private final @Getter List<JWKSourceWithIssuer<?>> remoteJWKSets;
     private final EnturAuthProperties enturAuthProperties;
     private final TenantJwtGrantedAuthoritiesConverter authoritiesConverter;
     private final HealthReportListener<

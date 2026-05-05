@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NonNull;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
@@ -24,7 +25,7 @@ public final class IssuerAuthenticationManagerResolver
         implements AuthenticationManagerResolver<HttpServletRequest>, SupportsReadiness {
 
     private final Map<String, AuthenticationManager> authenticationManagers;
-    private final List<JWKSourceWithIssuer<?>> remoteJWKSets;
+    private final @Getter List<JWKSourceWithIssuer<?>> remoteJWKSets;
     private final EnturAuthProperties enturAuthProperties;
     private final TenantJwtGrantedAuthoritiesConverter authoritiesConverter;
     private final HealthReportListener<
