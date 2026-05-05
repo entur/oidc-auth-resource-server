@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
-import org.springframework.web.server.ServerWebExchange;
 
 @Slf4j
 @Configuration
@@ -47,8 +46,7 @@ public class ConfigReactiveAuthManagerResolverAutoConfiguration {
     private final List<JWKSourceWithIssuer<?>> remoteJWKSets = new ArrayList<>();
 
     @Bean
-    public ReactiveAuthenticationManagerResolver<ServerWebExchange>
-            reactiveAuthenticationManagerResolver() {
+    public ReactiveIssuerAuthenticationManagerResolver reactiveAuthenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
         final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
