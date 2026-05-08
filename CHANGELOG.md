@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-client)
 
+## oidc-auth-resource-server v2.1.0
+* Change the behaviour of JWKS health indicator.
+
 ## oidc-auth-resource-server v2.0.0
 * Changed actuator permit from actuator/** too individual paths.
 
