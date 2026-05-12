@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.common.server.AuthProviders;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.entur.auth.spring.common.server.ServerCondition;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
-import org.entur.auth.spring.config.server.JWKSourceWithIssuer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,7 +37,7 @@ import org.springframework.security.authentication.AuthenticationManagerResolver
 @RequiredArgsConstructor
 public class ConfigAuthManagerResolverAutoConfiguration {
     private final Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
-    private final List<JWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+    private final List<JWKSourceWithIssuer<?>> remoteJWKSets = new ArrayList<>();
 
     private final EnturAuthProperties enturAuthProperties;
     private final AuthProviders authProviders;

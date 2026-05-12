@@ -1,4 +1,4 @@
-package org.entur.auth.spring.config.server;
+package org.entur.auth.spring.common.server;
 
 import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.JWK;
@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JWKSourceWithIssuer implements JWKSource<SecurityContext> {
+public class JWKSourceWithIssuer<C extends SecurityContext> implements JWKSource<C> {
     @Getter private final String issuerUrl;
 
     private final JWKSource<SecurityContext> jwkSource;

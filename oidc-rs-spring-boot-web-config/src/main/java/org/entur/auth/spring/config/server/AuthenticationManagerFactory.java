@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.common.server.AudienceValidator;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +41,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 public class AuthenticationManagerFactory {
     public static void add(
             Map<String, AuthenticationManager> authenticationManagers,
-            List<JWKSourceWithIssuer> remoteJWKSets,
+            List<JWKSourceWithIssuer<?>> remoteJWKSets,
             IssuerProperties provider,
             @NonNull EnturAuthProperties enturAuthProperties,
             @NonNull Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter,
@@ -102,7 +103,7 @@ public class AuthenticationManagerFactory {
                 jwkSourceBuilder.healthReporting(healthReportListener);
             }
 
-            var jwkSource = new JWKSourceWithIssuer(provider.getIssuerUrl(), jwkSourceBuilder.build());
+            var jwkSource = new JWKSourceWithIssuer<>(provider.getIssuerUrl(), jwkSourceBuilder.build());
             remoteJWKSets.add(jwkSource);
 
             DefaultJWTProcessor<SecurityContext> jwtProcessor =
