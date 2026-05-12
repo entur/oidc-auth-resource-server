@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.common.server.AudienceValidator;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,7 +48,7 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 public class ReactiveAuthenticationManagerFactory {
     public static void add(
             Map<String, ReactiveAuthenticationManager> authenticationManagers,
-            List<ReactiveJWKSourceWithIssuer> remoteJWKSets,
+            List<JWKSourceWithIssuer<?>> remoteJWKSets,
             IssuerProperties provider,
             @NonNull EnturAuthProperties enturAuthProperties,
             @NonNull Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter,
@@ -104,7 +105,8 @@ public class ReactiveAuthenticationManagerFactory {
             }
 
             var jwkSource =
-                    new ReactiveJWKSourceWithIssuer(provider.getIssuerUrl(), jwkSourceBuilder.build());
+                    new JWKSourceWithIssuer<JWKSecurityContext>(
+                            provider.getIssuerUrl(), jwkSourceBuilder.build());
             remoteJWKSets.add(jwkSource);
 
             // Create selector
