@@ -9,8 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
+import static org.springframework.boot.health.contributor.Status.DOWN;
+import static org.springframework.boot.health.contributor.Status.UP;
 
 import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("JwksHealthIndicator test suite")

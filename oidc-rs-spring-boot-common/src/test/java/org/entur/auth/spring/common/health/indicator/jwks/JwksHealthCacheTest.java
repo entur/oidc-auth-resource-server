@@ -13,8 +13,8 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
+import static org.springframework.boot.health.contributor.Status.DOWN;
+import static org.springframework.boot.health.contributor.Status.UP;
 
 import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.JWK;
@@ -39,7 +39,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Status;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("JwksHealthCache test suite")

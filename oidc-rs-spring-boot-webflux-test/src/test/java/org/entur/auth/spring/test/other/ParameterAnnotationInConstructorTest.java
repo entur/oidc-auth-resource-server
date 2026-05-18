@@ -1,20 +1,22 @@
 package org.entur.auth.spring.test.other;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ExtendWith({SpringExtension.class, TenantJsonWebToken.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ParameterAnnotationInConstructorTest {
     @Autowired private WebTestClient webTestClient;
@@ -28,7 +30,7 @@ public class ParameterAnnotationInConstructorTest {
     @Test
     void testInternal() {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {

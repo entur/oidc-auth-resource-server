@@ -1,14 +1,16 @@
 package org.entur.auth.spring.test.authorization;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.entur.auth.junit.tenant.TravellerTenant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +37,7 @@ class ReactiveAuthorizeRequestsUsingIssuersTest {
     void testProtectedWithPartner(
             @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {
@@ -50,7 +52,7 @@ class ReactiveAuthorizeRequestsUsingIssuersTest {
     @Test
     void testProtectedWithWrongTenant(@TravellerTenant(clientId = "clientId") String token) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {
@@ -65,7 +67,7 @@ class ReactiveAuthorizeRequestsUsingIssuersTest {
     @Test
     void testProtectedWithWrongToken() {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {
@@ -80,7 +82,7 @@ class ReactiveAuthorizeRequestsUsingIssuersTest {
     @Test
     void testProtectedWithNoBearer() {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {

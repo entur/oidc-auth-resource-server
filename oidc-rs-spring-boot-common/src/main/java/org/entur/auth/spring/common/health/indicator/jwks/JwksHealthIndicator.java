@@ -1,14 +1,14 @@
 package org.entur.auth.spring.common.health.indicator.jwks;
 
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
+import static org.springframework.boot.health.contributor.Status.DOWN;
+import static org.springframework.boot.health.contributor.Status.UP;
 
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 
 @RequiredArgsConstructor
 public final class JwksHealthIndicator implements HealthIndicator {

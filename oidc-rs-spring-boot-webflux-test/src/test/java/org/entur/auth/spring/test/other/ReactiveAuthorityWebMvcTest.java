@@ -1,19 +1,15 @@
 package org.entur.auth.spring.test.other;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
-import org.entur.auth.spring.application.GreetingController;
-import org.entur.auth.spring.config.ConfigReactiveAuthManagerResolverAutoConfiguration;
-import org.entur.auth.spring.config.ConfigReactiveAuthProvidersAutoConfiguration;
-import org.entur.auth.spring.config.ConfigReactiveResourceServerAutoConfiguration;
-import org.entur.auth.spring.webflux.ReactiveResourceServerAutoConfiguration;
-import org.entur.auth.spring.webflux.ReactiveResourceServerDefaultAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -24,15 +20,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
             "entur.auth.tenants.environment=mock",
             "entur.auth.tenants.include=internal,partner",
         })
+@SpringBootTest
 @ExtendWith({TenantJsonWebToken.class})
-@WebFluxTest({GreetingController.class})
-@ImportAutoConfiguration({
-    ReactiveResourceServerAutoConfiguration.class,
-    ReactiveResourceServerDefaultAutoConfiguration.class,
-    ConfigReactiveAuthProvidersAutoConfiguration.class,
-    ConfigReactiveAuthManagerResolverAutoConfiguration.class,
-    ConfigReactiveResourceServerAutoConfiguration.class
-})
+@AutoConfigureWebTestClient
 public class ReactiveAuthorityWebMvcTest {
     @Autowired private WebTestClient webTestClient;
 
@@ -40,7 +30,7 @@ public class ReactiveAuthorityWebMvcTest {
     void testInternalWithPartner(
             @PartnerTenant(clientId = "clientId", subject = "subject") String authorization) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {
@@ -55,7 +45,7 @@ public class ReactiveAuthorityWebMvcTest {
     @Test
     void testInternalWithInternal(@InternalTenant(clientId = "clientId") String authorization) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {

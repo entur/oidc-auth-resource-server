@@ -31,6 +31,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     // Testing
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-restclient")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }

@@ -5,9 +5,9 @@ import static java.lang.System.currentTimeMillis;
 import static java.time.Duration.between;
 import static java.time.Instant.EPOCH;
 import static java.util.Optional.ofNullable;
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UNKNOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
+import static org.springframework.boot.health.contributor.Status.DOWN;
+import static org.springframework.boot.health.contributor.Status.UNKNOWN;
+import static org.springframework.boot.health.contributor.Status.UP;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
 import lombok.NonNull;
 import lombok.val;
 import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Status;
 
 public final class JwksHealthCache {
     private final @NonNull LoadingCache<@NonNull JWKSourceWithIssuer<?>, Status> cache;
