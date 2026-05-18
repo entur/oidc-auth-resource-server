@@ -1,4 +1,4 @@
-# [Release notes](https://github.com/entur/oidc-auth-client)
+# [Release notes](https://github.com/entur/oidc-auth-resource-server)
 
 ## oidc-auth-resource-server v2.2.0
 * Change the behaviour of JWKS health indicator.
