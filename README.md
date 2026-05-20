@@ -403,6 +403,9 @@ Build and run JUnit tests:
 ./gradlew build
 ```
 
+Releases are done using the publish.yaml workflow.
+Do not bump the version in gradle.properties manually!
+
 ## Contributing
 Pull requests are welcome! See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
