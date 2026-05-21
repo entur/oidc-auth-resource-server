@@ -11,9 +11,9 @@ java {
 
 dependencies {
     // Spring
-    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBoot3Version}")
-    api("org.springframework.boot:spring-boot-starter-web:${springBoot3Version}")
-    api("org.springframework.boot:spring-boot-starter-actuator:${springBoot3Version}")
+    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBootVersion}")
+    api("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    api("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
@@ -21,9 +21,15 @@ dependencies {
 
     // Testing
     testImplementation project(':oidc-rs-junit-tenant')
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+    constraints {
+        api('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
+        compileOnly('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
+        testImplementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
+    }
 }
 
 spotbugs {

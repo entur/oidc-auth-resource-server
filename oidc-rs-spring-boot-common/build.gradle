@@ -11,7 +11,7 @@ java {
 
 dependencies {
     // Spring Boot
-    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBoot3Version}")
+    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBootVersion}")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
@@ -19,7 +19,7 @@ dependencies {
 
     // Testing
     testImplementation project(':oidc-rs-junit-tenant')
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }
