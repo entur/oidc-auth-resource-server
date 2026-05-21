@@ -21,7 +21,7 @@ dependencies {
     // Testing
     testImplementation project(':oidc-rs-junit-tenant')
     testImplementation("ch.qos.logback:logback-classic:${logback14xVersion}")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBoot3Version}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }
