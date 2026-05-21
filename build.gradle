@@ -17,7 +17,7 @@ plugins {
 
 subprojects {
     ext {
-        springBootVersion = '3.5.12'
+        springBootVersion = '3.5.14'
         javaJwtVersion = '4.5.0'
         jjwtVersion = '0.13.0'
         apacheCommonsVersion = '2.21.0'
