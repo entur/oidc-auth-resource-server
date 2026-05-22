@@ -10,9 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NonNull;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.entur.auth.spring.common.server.SupportsReadiness;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +25,7 @@ public final class IssuerAuthenticationManagerResolver
         implements AuthenticationManagerResolver<HttpServletRequest>, SupportsReadiness {
 
     private final Map<String, AuthenticationManager> authenticationManagers;
-    private final List<JWKSourceWithIssuer> remoteJWKSets;
+    private final @Getter List<JWKSourceWithIssuer<?>> remoteJWKSets;
     private final EnturAuthProperties enturAuthProperties;
     private final TenantJwtGrantedAuthoritiesConverter authoritiesConverter;
     private final HealthReportListener<
@@ -33,7 +35,7 @@ public final class IssuerAuthenticationManagerResolver
 
     public IssuerAuthenticationManagerResolver(
             @NonNull Map<String, AuthenticationManager> authenticationManagers,
-            @NonNull List<JWKSourceWithIssuer> remoteJWKSets,
+            @NonNull List<JWKSourceWithIssuer<?>> remoteJWKSets,
             @NonNull EnturAuthProperties enturAuthProperties,
             @NonNull TenantJwtGrantedAuthoritiesConverter authoritiesConverter,
             HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>

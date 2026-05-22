@@ -13,7 +13,6 @@ dependencies {
     // Spring
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBootVersion}")
     api("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-    api("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")

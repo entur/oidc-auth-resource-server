@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NonNull;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
 import org.entur.auth.spring.common.server.IssuerProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.entur.auth.spring.common.server.SupportsReadiness;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -24,7 +26,7 @@ public final class ReactiveIssuerAuthenticationManagerResolver
         implements ReactiveAuthenticationManagerResolver<ServerWebExchange>, SupportsReadiness {
 
     private final Map<String, ReactiveAuthenticationManager> authenticationManagers;
-    private final List<ReactiveJWKSourceWithIssuer> remoteJWKSets;
+    private final @Getter List<JWKSourceWithIssuer<?>> remoteJWKSets;
     private final EnturAuthProperties enturAuthProperties;
     private final TenantJwtGrantedAuthoritiesConverter authoritiesConverter;
     private final HealthReportListener<
@@ -35,7 +37,7 @@ public final class ReactiveIssuerAuthenticationManagerResolver
 
     public ReactiveIssuerAuthenticationManagerResolver(
             @NonNull Map<String, ReactiveAuthenticationManager> authenticationManagers,
-            @NonNull List<ReactiveJWKSourceWithIssuer> remoteJWKSets,
+            @NonNull List<JWKSourceWithIssuer<?>> remoteJWKSets,
             @NonNull EnturAuthProperties enturAuthProperties,
             @NonNull TenantJwtGrantedAuthoritiesConverter authoritiesConverter,
             HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
@@ -59,12 +61,12 @@ public final class ReactiveIssuerAuthenticationManagerResolver
 
     public Set<String> getIssuers() {
         return remoteJWKSets.stream()
-                .map(ReactiveJWKSourceWithIssuer::getIssuerUrl)
+                .map(JWKSourceWithIssuer::getIssuerUrl)
                 .collect(Collectors.toSet());
     }
 
     public boolean getReadiness() {
-        return remoteJWKSets.stream().allMatch(ReactiveJWKSourceWithIssuer::getReadiness);
+        return remoteJWKSets.stream().allMatch(JWKSourceWithIssuer::getReadiness);
     }
 
     public void addIssuer(@NonNull IssuerProperties issuerProperties) {

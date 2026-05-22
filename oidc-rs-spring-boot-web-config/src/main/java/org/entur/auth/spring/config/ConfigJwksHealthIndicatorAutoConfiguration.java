@@ -1,46 +1,59 @@
 package org.entur.auth.spring.config;
 
-import com.nimbusds.jose.jwk.source.JWKSetSourceWithHealthStatusReporting;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jose.util.health.HealthReportListener;
-import com.nimbusds.jose.util.health.HealthStatus;
-import lombok.RequiredArgsConstructor;
+import static java.time.Clock.systemDefaultZone;
+import static java.time.Duration.ofSeconds;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.SERVLET;
+
+import java.time.Clock;
+import java.util.concurrent.ExecutorService;
+import lombok.NonNull;
+import org.entur.auth.spring.common.health.indicator.jwks.JwksHealthCache;
+import org.entur.auth.spring.common.health.indicator.jwks.JwksHealthIndicator;
 import org.entur.auth.spring.common.server.ServerCondition;
+import org.entur.auth.spring.config.server.IssuerAuthenticationManagerResolver;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 /** Configuration class for a custom health indicator related to JWKS (JSON Web Key Set). */
-@Configuration("jwksState")
+@Configuration
 @Conditional(ServerCondition.class)
 @ConditionalOnClass(HealthIndicator.class)
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnWebApplication(type = SERVLET)
 @ConditionalOnEnabledHealthIndicator("jwks")
-@RequiredArgsConstructor
-public class ConfigJwksHealthIndicatorAutoConfiguration implements HealthIndicator {
-    final Health.Builder status = Health.up();
+public class ConfigJwksHealthIndicatorAutoConfiguration {
+    @Bean
+    @ConditionalOnMissingBean
+    public @NonNull Clock jwksClock() {
+        return systemDefaultZone();
+    }
 
-    /**
-     * Implementation of the HealthIndicator interface. Checks the health status related to JWKS.
-     *
-     * @return A Health object representing the health status.
-     */
-    @Override
-    public Health health() {
-        return status.build();
+    @Bean(destroyMethod = "shutdown")
+    @ConditionalOnMissingBean
+    public @NonNull ExecutorService jwksHealthExecutor() {
+        return newSingleThreadExecutor(new CustomizableThreadFactory("jwks-health-"));
     }
 
     @Bean
-    HealthReportListener<JWKSetSourceWithHealthStatusReporting<SecurityContext>, SecurityContext>
-            healthReportListener() {
-        return healthReport ->
-                status.status(
-                        healthReport.getHealthStatus() == HealthStatus.NOT_HEALTHY ? Status.DOWN : Status.UP);
+    @ConditionalOnMissingBean
+    public @NonNull JwksHealthCache jwksHealthCache(
+            final @NonNull @Qualifier("jwksClock") Clock clock,
+            final @NonNull @Qualifier("jwksHealthExecutor") ExecutorService executor) {
+        return new JwksHealthCache(clock, executor, ofSeconds(5));
+    }
+
+    @Bean("jwksState")
+    public @NonNull JwksHealthIndicator jwksHealthIndicator(
+            final @NonNull IssuerAuthenticationManagerResolver resolver,
+            final @NonNull JwksHealthCache cache) {
+        return new JwksHealthIndicator(resolver.getRemoteJWKSets(), cache);
     }
 }

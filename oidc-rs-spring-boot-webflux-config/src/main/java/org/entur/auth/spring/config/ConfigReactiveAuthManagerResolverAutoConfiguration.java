@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.entur.auth.spring.common.server.AuthProviders;
 import org.entur.auth.spring.common.server.EnturAuthProperties;
+import org.entur.auth.spring.common.server.JWKSourceWithIssuer;
 import org.entur.auth.spring.common.server.ServerCondition;
 import org.entur.auth.spring.common.server.TenantJwtGrantedAuthoritiesConverter;
 import org.entur.auth.spring.config.server.ReactiveIssuerAuthenticationManagerResolver;
-import org.entur.auth.spring.config.server.ReactiveJWKSourceWithIssuer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
-import org.springframework.web.server.ServerWebExchange;
 
 @Slf4j
 @Configuration
@@ -44,11 +43,10 @@ public class ConfigReactiveAuthManagerResolverAutoConfiguration {
             healthReportListener;
 
     private final Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
-    private final List<ReactiveJWKSourceWithIssuer> remoteJWKSets = new ArrayList<>();
+    private final List<JWKSourceWithIssuer<?>> remoteJWKSets = new ArrayList<>();
 
     @Bean
-    public ReactiveAuthenticationManagerResolver<ServerWebExchange>
-            reactiveAuthenticationManagerResolver() {
+    public ReactiveIssuerAuthenticationManagerResolver reactiveAuthenticationManagerResolver() {
         log.debug("Configure AuthenticationManagerResolver");
         final var authoritiesConverter = new TenantJwtGrantedAuthoritiesConverter(authProviders);
 
