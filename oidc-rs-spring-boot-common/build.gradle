@@ -1,6 +1,9 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
     id 'oidcAuth.java-conventions'
     id 'oidcAuth.library-conventions'
+    id 'io.spring.dependency-management'
 }
 
 java {
@@ -9,10 +12,16 @@ java {
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
 dependencies {
     // Spring Boot
-    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBootVersion}")
-    api("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    api("org.springframework.boot:spring-boot-starter-actuator")
     api("com.github.ben-manes.caffeine:caffeine:${caffeineVersion}")
 
     // Other
@@ -21,7 +30,7 @@ dependencies {
 
     // Testing
     testImplementation project(':oidc-rs-junit-tenant')
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }
