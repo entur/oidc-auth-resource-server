@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-resource-server)
 
+## oidc-auth-resource-server v3.0.0
+* Migrate project to Spring Boot 4.
+
 ## oidc-auth-resource-server v2.2.0
 * Change the behaviour of JWKS health indicator.
 
