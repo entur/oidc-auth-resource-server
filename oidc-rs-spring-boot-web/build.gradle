@@ -25,9 +25,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     constraints {
-        api('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
-        compileOnly('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
-        testImplementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
+        api('org.apache.tomcat.embed:tomcat-embed-core:11.0.22') { because 'CVE-2026-41293' }
+        compileOnly('org.apache.tomcat.embed:tomcat-embed-core:11.0.22') { because 'CVE-2026-41293' }
+        testImplementation('org.apache.tomcat.embed:tomcat-embed-core:11.0.22') { because 'CVE-2026-41293' }
     }
 }
 
