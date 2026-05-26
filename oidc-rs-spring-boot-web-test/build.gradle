@@ -1,9 +1,8 @@
-import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import static org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id 'oidcAuth.java-conventions'
     id 'oidcAuth.library-conventions'
-    id 'io.spring.dependency-management'
 }
 
 java {
@@ -12,13 +11,9 @@ java {
     }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom SpringBootPlugin.BOM_COORDINATES
-    }
-}
-
 dependencies {
+    api(platform(BOM_COORDINATES))
+
     // Spring
     api project(':oidc-rs-spring-boot-web-config')
     api ("org.springframework.boot:spring-boot-starter-test")
