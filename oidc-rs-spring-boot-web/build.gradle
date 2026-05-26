@@ -1,9 +1,8 @@
-import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import static org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id 'oidcAuth.java-conventions'
     id 'oidcAuth.library-conventions'
-    id 'io.spring.dependency-management'
 }
 
 java {
@@ -12,13 +11,9 @@ java {
     }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom SpringBootPlugin.BOM_COORDINATES
-    }
-}
-
 dependencies {
+    api(platform(BOM_COORDINATES))
+
     // Spring
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     api("org.springframework.boot:spring-boot-starter-web")
@@ -35,9 +30,10 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     constraints {
-        api('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
-        compileOnly('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
-        testImplementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.55') { because 'CVE-2026-41293' }
+        api('org.apache.tomcat.embed:tomcat-embed-core') {
+            version { require '11.0.22' }
+            because 'CVE-2026-41293'
+        }
     }
 }
 
