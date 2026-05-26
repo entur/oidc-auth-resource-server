@@ -34,8 +34,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.health.contributor.Health;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 
 @ExtendWith(MockitoExtension.class)

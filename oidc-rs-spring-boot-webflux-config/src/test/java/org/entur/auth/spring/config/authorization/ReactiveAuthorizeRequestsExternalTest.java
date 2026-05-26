@@ -1,13 +1,15 @@
 package org.entur.auth.spring.config.authorization;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,7 +36,7 @@ class ReactiveAuthorizeRequestsExternalTest {
     void testProtectedWithPartner(
             @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {

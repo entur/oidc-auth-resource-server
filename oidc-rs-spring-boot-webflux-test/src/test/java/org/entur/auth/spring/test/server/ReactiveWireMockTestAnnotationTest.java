@@ -1,5 +1,7 @@
 package org.entur.auth.spring.test.server;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.entur.auth.junit.tenant.PartnerTenant;
@@ -12,8 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver;
 import org.springframework.test.context.ActiveProfiles;
@@ -53,7 +55,7 @@ class ReactiveWireMockTestAnnotationTest {
             @PartnerTenant(clientId = "clientId", subject = "subject") String token) {
 
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/protected")
                 .headers(
                         httpHeaders -> {

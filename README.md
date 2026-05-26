@@ -395,7 +395,7 @@ public class ResourceServerDefaultAutoConfiguration {
 Clone the repository:
 ```bash
 git clone https://github.com/entur/oidc-auth-resource-server.git
-cd oidc-auth-client
+cd oidc-auth-resource-server
 ```
 
 Build and run JUnit tests:

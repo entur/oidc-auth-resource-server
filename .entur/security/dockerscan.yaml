@@ -1,8 +1,8 @@
 apiVersion: entur.io/securitytools/v1
 kind: DockerScanConfig
 metadata:
-  id: oidcauthclientallowlist
-  name: oidc-auth-client-allow-list
+  id: oidcauthresourceserverallowlist
+  name: oidc-auth-resource-server-allow-list
   owner: team-sikkerhet
 spec:
   allowlist:

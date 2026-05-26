@@ -1,13 +1,15 @@
 package org.entur.auth.spring.test.server;
 
+import static org.springframework.http.HttpMethod.GET;
+
 import org.entur.auth.junit.tenant.InternalTenant;
 import org.entur.auth.junit.tenant.PartnerTenant;
 import org.entur.auth.junit.tenant.TenantJsonWebToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -22,7 +24,7 @@ public class AuthorityInternalTest {
     void testInternalWithPartner(
             @PartnerTenant(clientId = "clientId", subject = "subject") String authorization) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {
@@ -37,7 +39,7 @@ public class AuthorityInternalTest {
     @Test
     void testInternalWithInternal(@InternalTenant(clientId = "clientId") String authorization) {
         webTestClient
-                .get()
+                .method(GET)
                 .uri("/internal")
                 .headers(
                         httpHeaders -> {
