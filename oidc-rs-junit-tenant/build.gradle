@@ -1,9 +1,13 @@
+import static org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+
 plugins {
     id 'oidcAuth.java-conventions'
     id 'oidcAuth.library-conventions'
 }
 
 dependencies {
+    api(platform(BOM_COORDINATES))
+
     // Wiremock
     api("org.wiremock:wiremock-standalone:${wiremockVersion}")
 
