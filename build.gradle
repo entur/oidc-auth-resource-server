@@ -22,7 +22,6 @@ subprojects {
         jjwtVersion = '0.13.0'
         apacheCommonsVersion = '2.21.0'
         slf4jVersion = '2.0.17'
-        caffeineVersion = '3.2.4'
 
         junitPlatformVersion = '1.12.2'
         junitJupiterVersion  = '6.0.1'

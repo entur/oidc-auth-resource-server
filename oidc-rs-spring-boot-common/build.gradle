@@ -17,7 +17,7 @@ dependencies {
     // Spring Boot
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     api("org.springframework.boot:spring-boot-starter-actuator")
-    api("com.github.ben-manes.caffeine:caffeine:${caffeineVersion}")
+    api("com.github.ben-manes.caffeine:caffeine")
 
     // Other
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
