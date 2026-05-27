@@ -1,3 +1,5 @@
+import static org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+
 plugins {
     id 'oidcAuth.java-conventions'
     id 'oidcAuth.library-conventions'
@@ -10,9 +12,11 @@ java {
 }
 
 dependencies {
+    api(platform(BOM_COORDINATES))
+
     // Spring
     api project(':oidc-rs-spring-boot-web-config')
-    api ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    api ("org.springframework.boot:spring-boot-starter-test")
 
     // Junit
     api project(':oidc-rs-junit-tenant')

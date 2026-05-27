@@ -13,16 +13,15 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.53.0' apply false
     id "com.github.spotbugs" version "6.4.5" apply false
     id 'com.diffplug.spotless' version "8.0.0" apply false
+    id 'org.springframework.boot' version "3.5.14" apply false
 }
 
 subprojects {
     ext {
-        springBootVersion = '3.5.14'
         javaJwtVersion = '4.5.0'
         jjwtVersion = '0.13.0'
         apacheCommonsVersion = '2.21.0'
         slf4jVersion = '2.0.17'
-        caffeineVersion = '3.2.4'
 
         junitPlatformVersion = '1.12.2'
         junitJupiterVersion  = '6.0.1'
