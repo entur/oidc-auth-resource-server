@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - main
+      - spring-boot-3.5.x
 
 jobs:
   build:
