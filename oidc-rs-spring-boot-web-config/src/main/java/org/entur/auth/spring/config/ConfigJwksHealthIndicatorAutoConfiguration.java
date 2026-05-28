@@ -30,14 +30,17 @@ import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 @ConditionalOnWebApplication(type = SERVLET)
 @ConditionalOnEnabledHealthIndicator("jwks")
 public class ConfigJwksHealthIndicatorAutoConfiguration {
+    private static final String JWKS_CLOCK_QUALIFIER = "jwksClock";
+    private static final String JWKS_HEALTH_EXECUTOR_QUALIFIER = "jwksHealthExecutor";
+
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(name = JWKS_CLOCK_QUALIFIER)
     public @NonNull Clock jwksClock() {
         return systemDefaultZone();
     }
 
     @Bean(destroyMethod = "shutdown")
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(name = JWKS_HEALTH_EXECUTOR_QUALIFIER)
     public @NonNull ExecutorService jwksHealthExecutor() {
         return newSingleThreadExecutor(new CustomizableThreadFactory("jwks-health-"));
     }
@@ -45,8 +48,8 @@ public class ConfigJwksHealthIndicatorAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public @NonNull JwksHealthCache jwksHealthCache(
-            final @NonNull @Qualifier("jwksClock") Clock clock,
-            final @NonNull @Qualifier("jwksHealthExecutor") ExecutorService executor) {
+            final @NonNull @Qualifier(JWKS_CLOCK_QUALIFIER) Clock clock,
+            final @NonNull @Qualifier(JWKS_HEALTH_EXECUTOR_QUALIFIER) ExecutorService executor) {
         return new JwksHealthCache(clock, executor, ofSeconds(5));
     }
 
