@@ -19,6 +19,8 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.NonNull;
 import lombok.val;
@@ -95,6 +97,32 @@ class ConfigReactiveJwksHealthIndicatorAutoConfigurationTest {
                                 assertThat(context)
                                         .doesNotHaveBean(JwksHealthCache.class)
                                         .doesNotHaveBean(JwksHealthIndicator.class));
+    }
+
+    @Test
+    void should_still_create_jwks_clock_when_differently_named_clock_bean_exists() {
+        contextRunner
+                .withPropertyValues("management.health.jwks.enabled=true")
+                .withBean("testClock", Clock.class, Clock::systemDefaultZone)
+                .run(
+                        context ->
+                                assertThat(context)
+                                        .hasBean(JWKS_CLOCK_QUALIFIER)
+                                        .hasSingleBean(JwksHealthCache.class)
+                                        .hasSingleBean(JwksHealthIndicator.class));
+    }
+
+    @Test
+    void should_still_create_jwks_health_executor_when_differently_named_executor_bean_exists() {
+        contextRunner
+                .withPropertyValues("management.health.jwks.enabled=true")
+                .withBean("testExecutor", ExecutorService.class, Executors::newSingleThreadExecutor)
+                .run(
+                        context ->
+                                assertThat(context)
+                                        .hasBean(JWKS_HEALTH_EXECUTOR_QUALIFIER)
+                                        .hasSingleBean(JwksHealthCache.class)
+                                        .hasSingleBean(JwksHealthIndicator.class));
     }
 
     @Test
