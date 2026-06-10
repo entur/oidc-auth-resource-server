@@ -29,7 +29,7 @@ class TenantAnnotationTokenFactoryPortRaceTest {
             // bind the wildcard address, like a WireMock server in a competing fork would
             try (ServerSocket thief = new ServerSocket(stolenPort)) {
                 try (TenantAnnotationTokenFactory factory =
-                             new TenantAnnotationTokenFactory(new EnturProvider(), reservation)) {
+                        new TenantAnnotationTokenFactory(new EnturProvider(), reservation)) {
                     assertNotNull(factory.getServer());
                     assertNotEquals(stolenPort, factory.getServer().getPort());
                     assertEquals(reservation.getPort(), factory.getServer().getPort());

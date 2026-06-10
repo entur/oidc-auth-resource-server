@@ -231,85 +231,85 @@ public class TenantAnnotationTokenFactory implements AutoCloseable {
 
             return "Bearer "
                     + jwtTokenFactory
-                    .jwtTokenBuilder()
-                    .provider(provider)
-                    .domain(annotation.tenant())
-                    .subject(annotation.subject())
-                    .audience(annotation.audience())
-                    .expiresAt(Instant.now().plusNanos(annotation.expiresIn()))
-                    .claims(claims)
-                    .create();
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(annotation.tenant())
+                            .subject(annotation.subject())
+                            .audience(annotation.audience())
+                            .expiresAt(Instant.now().plusNanos(annotation.expiresIn()))
+                            .claims(claims)
+                            .create();
         } else if (tenant instanceof PartnerTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_PARTNER);
 
             return "Bearer "
                     + jwtTokenFactory
-                    .jwtTokenBuilder()
-                    .provider(provider)
-                    .domain(EnturProvider.TENANT_PARTNER)
-                    .subject(annotation.subject())
-                    .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
-                    .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
-                    .claims(
-                            Map.of(
-                                    EnturProvider.CLAIM_AZP, annotation.clientId(),
-                                    EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
-                                    EnturProvider.CLAIM_EMAIL, annotation.email(),
-                                    EnturProvider.CLAIM_EMAIL_VERIFIED, annotation.emailVerified(),
-                                    EnturProvider.CLAIM_PREFERRED_USERNAME, annotation.username(),
-                                    EnturProvider.CLAIM_PERMISSIONS, annotation.permissions()))
-                    .create();
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(EnturProvider.TENANT_PARTNER)
+                            .subject(annotation.subject())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
+                            .claims(
+                                    Map.of(
+                                            EnturProvider.CLAIM_AZP, annotation.clientId(),
+                                            EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
+                                            EnturProvider.CLAIM_EMAIL, annotation.email(),
+                                            EnturProvider.CLAIM_EMAIL_VERIFIED, annotation.emailVerified(),
+                                            EnturProvider.CLAIM_PREFERRED_USERNAME, annotation.username(),
+                                            EnturProvider.CLAIM_PERMISSIONS, annotation.permissions()))
+                            .create();
         } else if (tenant instanceof InternalTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_INTERNAL);
 
             return "Bearer "
                     + jwtTokenFactory
-                    .jwtTokenBuilder()
-                    .provider(provider)
-                    .domain(EnturProvider.TENANT_INTERNAL)
-                    .subject(annotation.clientId())
-                    .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
-                    .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
-                    .claims(
-                            Map.of(
-                                    EnturProvider.CLAIM_AZP, annotation.clientId(),
-                                    EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId()))
-                    .create();
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(EnturProvider.TENANT_INTERNAL)
+                            .subject(annotation.clientId())
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
+                            .claims(
+                                    Map.of(
+                                            EnturProvider.CLAIM_AZP, annotation.clientId(),
+                                            EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId()))
+                            .create();
         } else if (tenant instanceof TravellerTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_TRAVELLER);
 
             return "Bearer "
                     + jwtTokenFactory
-                    .jwtTokenBuilder()
-                    .provider(provider)
-                    .domain(EnturProvider.TENANT_TRAVELLER)
-                    .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
-                    .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
-                    .claims(
-                            Map.of(
-                                    EnturProvider.CLAIM_AZP, annotation.clientId(),
-                                    EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
-                                    EnturProvider.CLAIM_CUSTOMER_NUMBER, annotation.customerNumber()))
-                    .create();
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(EnturProvider.TENANT_TRAVELLER)
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
+                            .claims(
+                                    Map.of(
+                                            EnturProvider.CLAIM_AZP, annotation.clientId(),
+                                            EnturProvider.CLAIM_ORGANISATION_ID, annotation.organisationId(),
+                                            EnturProvider.CLAIM_CUSTOMER_NUMBER, annotation.customerNumber()))
+                            .create();
         } else if (tenant instanceof PersonTenant annotation) {
             checkTenantExists(server, jwtTokenFactory, provider, EnturProvider.TENANT_PERSON);
 
             return "Bearer "
                     + jwtTokenFactory
-                    .jwtTokenBuilder()
-                    .provider(provider)
-                    .domain(EnturProvider.TENANT_PERSON)
-                    .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
-                    .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
-                    .claims(
-                            Map.of(
-                                    EnturProvider.CLAIM_AZP,
-                                    annotation.clientId(),
-                                    EnturProvider.CLAIM_ORGANISATION_ID,
-                                    annotation.organisationId(),
-                                    EnturProvider.CLAIM_SOCIAL_SECURITY_NUMBER,
-                                    annotation.socialSecurityNumber()))
-                    .create();
+                            .jwtTokenBuilder()
+                            .provider(provider)
+                            .domain(EnturProvider.TENANT_PERSON)
+                            .audience(annotation.audience() == null ? null : new String[] {annotation.audience()})
+                            .expiresAt(ZonedDateTime.now().plusMinutes(annotation.expiresInMinutes()).toInstant())
+                            .claims(
+                                    Map.of(
+                                            EnturProvider.CLAIM_AZP,
+                                            annotation.clientId(),
+                                            EnturProvider.CLAIM_ORGANISATION_ID,
+                                            annotation.organisationId(),
+                                            EnturProvider.CLAIM_SOCIAL_SECURITY_NUMBER,
+                                            annotation.socialSecurityNumber()))
+                            .create();
         }
         throw new IllegalArgumentException("Unknown tenant " + tenant);
     }

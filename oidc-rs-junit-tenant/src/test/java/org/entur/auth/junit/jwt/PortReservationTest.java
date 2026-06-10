@@ -17,7 +17,7 @@ class PortReservationTest {
         String propertyName = "PortReservationTest.scan";
         int base = findConsecutiveFreePorts(3);
         try (ServerSocket occupiedFirst = bind(base);
-             ServerSocket occupiedSecond = bind(base + 1)) {
+                ServerSocket occupiedSecond = bind(base + 1)) {
             PortReservation reservation = new PortReservation(base, base + 2, propertyName);
             try {
                 assertTrue(reservation.start());
