@@ -1,5 +1,8 @@
 # [Release notes](https://github.com/entur/oidc-auth-resource-server)
 
+## oidc-auth-resource-server v3.0.3
+* Address CVE-2025-14813
+
 ## oidc-auth-resource-server v3.0.2
 * Address a bean conflict issue upon construction of JWKS health indicator
 
