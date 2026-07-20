@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 /**
@@ -57,5 +58,20 @@ public class ReactiveResourceServerAutoConfiguration {
         } catch (Exception e) {
             throw new ReactiveResourceServerConfigurationException(e);
         }
+    }
+
+    /**
+     * Workaround for <a href="https://github.com/spring-projects/spring-boot/issues/50778">
+     * spring-boot#50778</a>: in a pure WebFlux application, {@code @ConditionalOnDefaultWebSecurity}
+     * always evaluates to true because it checks for a servlet {@link SecurityFilterChain} bean,
+     * which never exists in a reactive context. This causes Spring Boot to create its own {@code
+     * reactiveJwtSecurityFilterChain} alongside ours, leading to a duplicate {@code anyExchange()}
+     * registration. Registering this sentinel bean makes the condition false, preventing Spring
+     * Boot's chain from being created.
+     */
+    @Bean
+    @ConditionalOnMissingBean(SecurityFilterChain.class)
+    public SecurityFilterChain sentinelServletSecurityFilterChain() {
+        return null;
     }
 }

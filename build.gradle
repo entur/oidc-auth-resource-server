@@ -13,21 +13,21 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.53.0' apply false
     id "com.github.spotbugs" version "6.4.5" apply false
     id 'com.diffplug.spotless' version "8.0.0" apply false
-    id 'org.springframework.boot' version "4.0.6" apply false
+    id 'org.springframework.boot' version "4.1.0" apply false
 }
 
 subprojects {
     ext {
-        javaJwtVersion = '4.5.0'
+        javaJwtVersion = '4.6.0'
         jjwtVersion = '0.13.0'
-        apacheCommonsVersion = '2.21.0'
-        slf4jVersion = '2.0.17'
+        apacheCommonsVersion = '2.22.0'
+        slf4jVersion = '2.0.18'
 
         junitPlatformVersion = '1.12.2'
-        junitJupiterVersion  = '6.0.1'
+        junitJupiterVersion  = '6.1.2'
         wiremockVersion = '3.13.2'
 
-        lombokVersion = '1.18.42'
+        lombokVersion = '1.18.46'
     }
 }
 
