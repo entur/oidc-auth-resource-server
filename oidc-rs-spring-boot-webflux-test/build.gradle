@@ -36,7 +36,7 @@ dependencies {
     constraints {
         api('org.apache.tomcat.embed:tomcat-embed-core') {
             version { require '11.0.25' }
-            because 'vulnerabilities'
+            because 'Fixes CVE-2026-65905, CVE-2026-68525 and CVE-2026-65182'
         }
     }
 }
