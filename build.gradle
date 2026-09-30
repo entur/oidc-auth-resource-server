@@ -1,8 +1,9 @@
 buildscript {
     configurations.classpath {
         resolutionStrategy {
-            // Fix https://github.com/jreleaser/jreleaser/issues/1643
-            force 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'
+            // JReleaser needs JGit 5.13.x, Spotless pulls in 7.x: https://github.com/jreleaser/jreleaser/issues/1643
+            // Latest 5.13.x, so CVE-2023-4759 is fixed.
+            force 'org.eclipse.jgit:org.eclipse.jgit:5.13.5.202508271544-r'
         }
     }
 }
