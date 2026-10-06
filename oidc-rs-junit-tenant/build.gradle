@@ -25,6 +25,18 @@ dependencies {
     // Test
     testImplementation("commons-io:commons-io:${apacheCommonsVersion}")
     testImplementation("com.auth0:java-jwt:${javaJwtVersion}")
+
+    constraints {
+        // Jackson 2 comes in via jjwt-jackson (2.12.7.1) and java-jwt (2.22.2).
+        api('com.fasterxml.jackson.core:jackson-databind') {
+            version { require '2.22.3' }
+            because 'Fixes GHSA-3wrr-7qpf-2prh, GHSA-wv8q-qhhj-9h54, GHSA-cxp5-3px4-pw24 and older advisories. Remove when jjwt-jackson and java-jwt pull in jackson-databind >= 2.22.3'
+        }
+        api('com.fasterxml.jackson.core:jackson-core') {
+            version { require '2.22.3' }
+            because 'Fixes GHSA-wf8f-6423-gfxg, GHSA-h46c-h94j-95f3, GHSA-p6pp-m3f8-5c89 and GHSA-7hhh-6rmp-j9qf. Remove when jjwt-jackson and java-jwt pull in jackson-core >= 2.22.3'
+        }
+    }
 }
 
 spotbugs {
