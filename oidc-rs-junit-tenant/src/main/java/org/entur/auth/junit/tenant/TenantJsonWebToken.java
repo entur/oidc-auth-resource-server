@@ -65,9 +65,17 @@ public class TenantJsonWebToken implements ParameterResolver, BeforeAllCallback 
     /** Manages reservation of the network port for the WireMock authentication server. */
     private static PortReservation portReservation;
 
-    /** Construct a new TenantJsonWebToken and initializes the reserved port */
+    /**
+     * Construct a new TenantJsonWebToken, reserving the port and initializing the token factory and
+     * WireMock server.
+     *
+     * <p>This happens during extension construction (before any lifecycle callback) so the final port
+     * is published to the {@link #MOCKAUTHSERVER_PORT_NAME} system property before {@code
+     * SpringExtension} loads the context. This keeps the Spring context wired to the same port the
+     * mock server listens on, even when the port has to be retried because the original was stolen.
+     */
     public TenantJsonWebToken() {
-        setupPortReservation();
+        setupTokenFactory();
     }
 
     /**
