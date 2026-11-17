@@ -8,8 +8,8 @@ class JavaConventionPluginTest extends PluginTest {
         buildFile << """
             plugins {
                 id 'oidc-auth.java-conventions' 
-                id 'com.github.ben-manes.versions' version '0.51.0' apply false
-                id "com.github.spotbugs" version "6.1.3" apply false
+                id 'io.github.ben-manes.versions' version '0.67.0' apply false
+                id "com.github.spotbugs" version "6.5.13" apply false
             }
         """
     }
