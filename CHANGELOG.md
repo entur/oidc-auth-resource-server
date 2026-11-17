@@ -1,5 +1,10 @@
 # [Release notes](https://github.com/entur/oidc-auth-resource-server)
 
+## oidc-auth-resource-server v3.1.0
+* Upgrade to latest version of Spring Boot 4.1
+* Upgrade dependencies
+* Upgrade Gradle wrapper
+
 ## oidc-auth-resource-server v3.0.3
 * Address CVE-2025-14813
 
