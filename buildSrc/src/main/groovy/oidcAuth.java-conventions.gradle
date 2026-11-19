@@ -7,7 +7,7 @@ plugins {
 
     // NOTE: external plugin version is specified in implementation dependency artifact of the project's build file
     id 'com.github.spotbugs'
-    id 'com.github.ben-manes.versions'
+    id 'io.github.ben-manes.versions'
 }
 
 compileJava {

@@ -132,7 +132,10 @@ public class DefaultAuthProviders implements AuthProviders {
     public static String getTenant(Authentication authentication) {
         String tenant = null;
         if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
-            tenant = getTenantFromString(jwtAuthenticationToken.getToken().getIssuer().getAuthority());
+            var issuer = jwtAuthenticationToken.getToken().getIssuer();
+            if (issuer != null) {
+                tenant = getTenantFromString(issuer.getAuthority());
+            }
         }
 
         return tenant;

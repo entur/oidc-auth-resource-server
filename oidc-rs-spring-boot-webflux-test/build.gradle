@@ -32,13 +32,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-restclient")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-
-    constraints {
-        api('org.apache.tomcat.embed:tomcat-embed-core') {
-            version { require '11.0.25' }
-            because 'Fixes CVE-2026-65905, CVE-2026-68525 and CVE-2026-65182'
-        }
-    }
 }
 
 spotbugs {

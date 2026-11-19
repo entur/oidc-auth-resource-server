@@ -23,8 +23,8 @@ public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
     @Override
     public OAuth2TokenValidatorResult validate(Jwt jwt) {
 
-        if (audiences.stream()
-                .anyMatch(audience -> jwt.getAudience() != null && jwt.getAudience().contains(audience))) {
+        var tokenAudiences = jwt.getAudience();
+        if (tokenAudiences != null && audiences.stream().anyMatch(tokenAudiences::contains)) {
             return OAuth2TokenValidatorResult.success();
         } else {
             return OAuth2TokenValidatorResult.failure(error);
